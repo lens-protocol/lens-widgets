@@ -1,7 +1,7 @@
 {
-  "name": "lens-widgets-react",
+  "name": "@lens-protocol/lens-widgets-react",
   "version": "0.0.1",
-  "description": "",
+  "description": "React widgets to easily integrate Lens into your app",
   "main": "dist/index.js",
   "scripts": {
     "watch:ts": "npx tsc --watch"

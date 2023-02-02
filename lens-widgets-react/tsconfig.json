@@ -13,7 +13,8 @@
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "strict": true,
+    "lib": ["ESNext", "DOM"],
+    "strict": true
   },
   "include": ["src/**/*"]
 }
