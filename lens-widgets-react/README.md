@@ -28,7 +28,7 @@ theme: Theme (light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
 
-![Share to Lens](https://user-images.githubusercontent.com/1857282/216200598-43f2beb2-63bb-4455-ab0f-0c95b1d08ccb.png)
+![Share to Lens](https://user-images.githubusercontent.com/1857282/216202985-490b7043-33de-4eaf-83e3-2d412c677974.jpg)
 
 ### Follow on Lens
 
@@ -46,4 +46,4 @@ theme: Theme (light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
 
-![Follow on Lens](https://user-images.githubusercontent.com/1857282/216201156-08523234-ea59-4d3b-a181-17aca7828f6f.png)
+![Follow on Lens](https://user-images.githubusercontent.com/1857282/216202951-d962aaa4-3aab-4d11-bab8-0e84ea743d65.jpg)
