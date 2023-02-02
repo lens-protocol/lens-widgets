@@ -23,7 +23,7 @@ export function FollowOnLens({
     if (handle.includes('.lens')) {
       handle = handle.split('.')[0]
     }
-    return handle
+    return handle.charAt(0).toUpperCase() + handle.slice(1);
   }
 
   return (
