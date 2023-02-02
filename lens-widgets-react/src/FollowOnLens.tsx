@@ -19,10 +19,17 @@ export function FollowOnLens({
     window.open(uri, '_newtab')
   }
 
+  function handleWithoutLens() {
+    if (handle.includes('.lens')) {
+      handle = handle.split('.')[0]
+    }
+    return handle
+  }
+
   return (
     <button onClick={navigate} style={getContainerStyle(theme, size)}>
       <LensIcon theme={theme} size={size} />
-      <p style={getTextStyle(theme, size)}>Follow On Lens</p>
+      <p style={getTextStyle(theme, size)}>Follow {handleWithoutLens()} on Lens</p>
     </button>
   )
 }
