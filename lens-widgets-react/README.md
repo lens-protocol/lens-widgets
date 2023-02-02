@@ -24,7 +24,7 @@ url: "https://your-awesome-app.com"
 hashtags: "web3,social,blockchain"
 via: "YourAwesomeApp"
 
-theme: Theme (light, mint, green, peach, lavender, blonde)
+theme: Theme (default, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
 
@@ -42,7 +42,7 @@ import {
 />
 
 /* Optional parameters */
-theme: Theme (light, mint, green, peach, lavender, blonde)
+theme: Theme (default, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
 
