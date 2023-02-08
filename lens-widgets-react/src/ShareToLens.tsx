@@ -8,7 +8,7 @@ export function ShareToLens({
   via,
   hashtags,
   theme = Theme.default,
-  size = Size.medium
+  size = Size.medium,
 } : {
   content: string,
   url?: string,

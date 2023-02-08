@@ -6,7 +6,7 @@ export default function LensIcon({
   theme = Theme.default,
 } : {
   size?: Size,
-  theme?: Theme
+  theme?: Theme,
 }) {
   let { backgroundColor, foregroundColor } = getColors(theme)
   let { width, height } = dimensionsMap[size]

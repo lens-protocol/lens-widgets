@@ -5,7 +5,7 @@ import { getContainerStyle, getTextStyle } from './utils'
 export function FollowOnLens({
   handle,
   theme = Theme.default,
-  size = Size.medium
+  size = Size.medium,
 } : {
   handle: string,
   theme?: Theme,
