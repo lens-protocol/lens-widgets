@@ -23,3 +23,8 @@ export enum Size {
   medium = 'medium',
   large = 'large'
 }
+
+export type Tokens = {
+  accessToken: string
+  refreshToken: string
+}

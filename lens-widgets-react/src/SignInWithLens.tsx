@@ -1,4 +1,5 @@
-import { Theme, Size } from './types' 
+import { useState } from 'react'
+import { Theme, Size, Tokens } from './types'
 import { getContainerStyle, getTextStyle } from './utils'
 import { Web3Provider } from '@ethersproject/providers'
 import {ethers } from 'ethers'
@@ -24,37 +25,50 @@ export function SignInWithLens({
   theme?: Theme,
   size?: Size,
   title?: string,
-  onSignIn: ({}) => void
+  onSignIn: (tokens:Tokens) => void
 }) {
-  async function authenticateWithLens() {   
-    if (!provider && window.ethereum) {
-      provider = await getProvider()
-    }
-    if (!provider) {
-      console.log('no provider configured...')
-      return
-    }
-    const address = await getAddress()
-    const challengeInfo = await client.query({
-      query: challenge,
-      variables: { address }
-    })
-    const signer = provider.getSigner()
-    const signature = await signer.signMessage(challengeInfo.data.challenge.text)
-    const authData = await client.mutate({
-      mutation: authenticate,
-      variables: {
-        address, signature
+  const [authTokens, setAuthTokens] = useState<Tokens | null>(null)
+  const [authenticating, setAuthenticating] = useState<boolean>(false)
+
+  async function authenticateWithLens() {
+    try {
+      if (authenticating) return
+      if (authTokens) {
+        onSignIn(authTokens)
+        return
       }
-    })
-    const { data: { authenticate: tokens }} = authData
-    console.log({ tokens })
-    onSignIn(tokens)
+      setAuthenticating(true)
+      if (!provider && window.ethereum) {
+        provider = await getProvider()
+      }
+      if (!provider) {
+        console.log('no provider configured...')
+        setAuthenticating(false)
+        return
+      }
+      const address = await getAddress()
+      const challengeInfo = await client.query({
+        query: challenge,
+        variables: { address }
+      })
+      const signer = provider.getSigner()
+      const signature = await signer.signMessage(challengeInfo.data.challenge.text)
+      const authData = await client.mutate({
+        mutation: authenticate,
+        variables: {
+          address, signature
+        }
+      })
+      const { data: { authenticate: tokens }} = authData
+      setAuthTokens(tokens)
+      onSignIn(tokens)
+      setAuthenticating(false)
+    } catch (err) {
+      console.log('error signing in with Lens...')
+    }
   }
   async function getAddress() {
-    const response = await window.ethereum.request({
-      method: 'eth_requestAccounts'
-    })
+    const response = await window.ethereum.request({ method: 'eth_requestAccounts' })
     return response[0]
   }
   async function getProvider() {
