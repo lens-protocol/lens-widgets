@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { Theme, Size, Tokens } from './types'
+import { Theme, Size, Tokens, Profile } from './types'
 import { getContainerStyle, getTextStyle } from './utils'
 import { Web3Provider } from '@ethersproject/providers'
-import {ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { client } from './graphql/client'
-import { challenge } from './graphql/challenge'
-import { authenticate } from './graphql/authenticate'
+import { challenge, authenticate, getProfile } from './graphql'
 import LensIcon from './LensIcon'
 
 declare global {
@@ -25,16 +24,17 @@ export function SignInWithLens({
   theme?: Theme,
   size?: Size,
   title?: string,
-  onSignIn: (tokens:Tokens) => void
+  onSignIn: (tokens: Tokens, profile: Profile) => void
 }) {
   const [authTokens, setAuthTokens] = useState<Tokens | null>(null)
   const [authenticating, setAuthenticating] = useState<boolean>(false)
+  const [profile, setProfile] = useState<Profile | undefined>()
 
   async function authenticateWithLens() {
     try {
       if (authenticating) return
-      if (authTokens) {
-        onSignIn(authTokens)
+      if (authTokens && profile) {
+        onSignIn(authTokens, profile)
         return
       }
       setAuthenticating(true)
@@ -60,11 +60,19 @@ export function SignInWithLens({
         }
       })
       const { data: { authenticate: tokens }} = authData
+      const profileData = await client.query({
+        query: getProfile,
+        variables: {
+          address, signature
+        }
+      })
+      const { data: { defaultProfile }} = profileData
+      setProfile(defaultProfile)
       setAuthTokens(tokens)
-      onSignIn(tokens)
+      onSignIn(tokens, defaultProfile)
       setAuthenticating(false)
     } catch (err) {
-      console.log('error signing in with Lens...')
+      console.log('error signing in with Lens...', err)
     }
   }
   async function getAddress() {
@@ -78,7 +86,7 @@ export function SignInWithLens({
       })
       return new ethers.providers.Web3Provider(window.ethereum)
     } catch (err) {
-      console.log('error connecting wallet and signing in...')
+      console.log('error connecting wallet and signing in...', err)
     }
   }
   return (
