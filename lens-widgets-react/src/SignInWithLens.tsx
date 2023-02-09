@@ -72,6 +72,7 @@ export function SignInWithLens({
       onSignIn(tokens, defaultProfile)
       setAuthenticating(false)
     } catch (err) {
+      setAuthenticating(false)
       console.log('error signing in with Lens...', err)
     }
   }
