@@ -47,3 +47,26 @@ size: Size (small, medium, large)
 ```
 
 ![Follow on Lens](https://user-images.githubusercontent.com/1857282/216202951-d962aaa4-3aab-4d11-bab8-0e84ea743d65.jpg)
+
+### Sign in With Lens
+
+```typescript
+import {
+  SignInWithLens, Theme, Size
+} from '@lens-protocol/widgets-react'
+
+async function onSignIn(tokens, profile) {
+  console.log('tokens: ', tokens)
+  console.log('profile: ', profile)
+}
+
+<SignInWithLens
+  onSignIn={onSignIn}
+/>
+
+/* Optional parameters */
+provider: EthereumProvider
+title: string
+theme: Theme (default, light, mint, green, peach, lavender, blonde)
+size: Size (small, medium, large)
+```

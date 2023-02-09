@@ -1,38 +1,72 @@
-# create-svelte
+## Lens Widgets Svelte
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+### Installation
 
-## Creating a project
-
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
+```sh
+npm install @lens-protocol/widgets-svelte
 ```
 
-## Developing
+## Usage
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Share to Lens
 
-```bash
-npm run dev
+```typescript
+import {
+  ShareToLens, Theme, Size
+} from '@lens-protocol/widgets-svelte'
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+<ShareToLens
+  content="Hello World!"
+/>
+
+/* Optional parameters */
+url: "https://your-awesome-app.com"
+hashtags: "web3,social,blockchain"
+via: "YourAwesomeApp"
+
+theme: Theme (default, light, mint, green, peach, lavender, blonde)
+size: Size (small, medium, large)
 ```
 
-## Building
+![Share to Lens](https://user-images.githubusercontent.com/1857282/216202985-490b7043-33de-4eaf-83e3-2d412c677974.jpg)
 
-To create a production version of your app:
+### Follow on Lens
 
-```bash
-npm run build
+```typescript
+import {
+  FollowOnLens, Theme, Size
+} from '@lens-protocol/widgets-svelte'
+
+<FollowOnLens
+  handle="stani"
+/>
+
+/* Optional parameters */
+theme: Theme (default, light, mint, green, peach, lavender, blonde)
+size: Size (small, medium, large)
 ```
 
-You can preview the production build with `npm run preview`.
+![Follow on Lens](https://user-images.githubusercontent.com/1857282/216202951-d962aaa4-3aab-4d11-bab8-0e84ea743d65.jpg)
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+### Sign in With Lens
+
+```typescript
+import {
+  SignInWithLens, Theme, Size
+} from '@lens-protocol/widgets-svelte'
+
+async function onSignIn(tokens, profile) {
+  console.log('tokens: ', tokens)
+  console.log('profile: ', profile)
+}
+
+<SignInWithLens
+  onSignIn={onSignIn}
+/>
+
+/* Optional parameters */
+provider: EthereumProvider
+title: string
+theme: Theme (default, light, mint, green, peach, lavender, blonde)
+size: Size (small, medium, large)
+```
