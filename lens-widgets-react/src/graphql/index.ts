@@ -1,3 +1,4 @@
 export { authenticate } from './authenticate'
 export { challenge } from './challenge'
-export { getProfile } from './getProfile'
+export { profileByAddress } from './profileByAddress'
+export { profileById } from './profileById'

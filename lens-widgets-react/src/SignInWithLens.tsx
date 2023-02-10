@@ -4,7 +4,7 @@ import { getContainerStyle, getTextStyle } from './utils'
 import { Web3Provider } from '@ethersproject/providers'
 import { ethers } from 'ethers'
 import { client } from './graphql/client'
-import { challenge, authenticate, getProfile } from './graphql'
+import { challenge, authenticate, profileByAddress } from './graphql'
 import LensIcon from './LensIcon'
 
 declare global {
@@ -61,7 +61,7 @@ export function SignInWithLens({
       })
       const { data: { authenticate: tokens }} = authData
       const profileData = await client.query({
-        query: getProfile,
+        query: profileByAddress,
         variables: {
           address, signature
         }

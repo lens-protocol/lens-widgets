@@ -7,6 +7,7 @@
   export let url: string, via:string, hashtags:string, content:string
   export let theme: Theme = Theme.default
   export let size: Size = Size.medium
+  export let title: string = 'Share to Lens'
 
   function handleClick() {
     if (!content) return
@@ -26,7 +27,7 @@
 
 <button style={getContainerStyle(theme, size)} class="button" on:click={handleClick}>
   <LensIcon theme={theme} size={size} />
-  <p style={getTextStyle(theme, size)} class="text">Share to Lens</p>
+  <p style={getTextStyle(theme, size)} class="text">{title}</p>
 </button>
 
 <style>

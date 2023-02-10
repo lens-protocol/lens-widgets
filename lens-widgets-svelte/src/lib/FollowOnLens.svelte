@@ -4,9 +4,14 @@
   import { getContainerStyle, getTextStyle } from './utils'
   import LensIcon from './LensIcon.svelte'
 
-  export let handle: string;
-  export let size = Size.medium;
-  export let theme= Theme.default;
+  export let handle: string
+  export let size = Size.medium
+  export let theme = Theme.default
+  export let title:string
+
+  if (!title) {
+    title = `Follow ${handleWithoutLens(handle)} on Lens`
+  }
 
   function navigate() {
     if (!handle.includes('.lens')) {
@@ -27,6 +32,6 @@
 <button style={getContainerStyle(theme, size)} class="button" on:click={navigate}>
   <LensIcon theme={theme} size={size} />
   <p style={getTextStyle(theme, size)} class="text">
-    Follow {handleWithoutLens(handle)} on Lens
+    {title}
   </p>
 </button>

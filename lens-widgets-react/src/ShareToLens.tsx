@@ -9,13 +9,15 @@ export function ShareToLens({
   hashtags,
   theme = Theme.default,
   size = Size.medium,
+  title = 'Share to Lens'
 } : {
   content: string,
   url?: string,
   via?: string,
   hashtags?: string,
   theme?: Theme,
-  size?: Size
+  size?: Size,
+  title?: string
 }) {
   function navigate() {
     let shareUrl = `https://lenster.xyz/?text=${encodeURIComponent(content)}`
@@ -34,7 +36,7 @@ export function ShareToLens({
   return (
     <button onClick={navigate} style={getContainerStyle(theme, size)}>
       <LensIcon theme={theme} size={size} />
-      <p style={getTextStyle(theme, size)}>Share to Lens</p>
+      <p style={getTextStyle(theme, size)}>{title}</p>
     </button>
   )
 }

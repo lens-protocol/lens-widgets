@@ -20,10 +20,10 @@ import {
 />
 
 /* Optional parameters */
-url: "https://your-awesome-app.com"
-hashtags: "web3,social,blockchain"
-via: "YourAwesomeApp"
-
+url: string = "https://your-awesome-app.com"
+hashtags: string = "web3,social,blockchain"
+via: string =  "YourAwesomeApp"
+title: string = "Share your post on Lens 🌿"
 theme: Theme (default, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
@@ -44,6 +44,7 @@ import {
 /* Optional parameters */
 theme: Theme (default, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
+title: string = "Follow me on Lens"
 ```
 
 ![Follow on Lens](https://user-images.githubusercontent.com/1857282/216202951-d962aaa4-3aab-4d11-bab8-0e84ea743d65.jpg)

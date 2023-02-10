@@ -13,6 +13,7 @@
   onSignIn={handleSignIn}
   size={Size.small}
   theme={Theme.peach}
+  title="Sign in here!"
 />
 <br />
 <SignInWithLens
@@ -27,6 +28,7 @@
   url="https://your-awesome-app.com"
   hashtags="web3,social,blockchain"
   via="YourAwesomeApp"
+  title="Share your post to Lens 🌿"
 />
 <br />
 
