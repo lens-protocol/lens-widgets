@@ -1,5 +1,5 @@
 import {
-  Theme, Size, ThemeColor
+  Theme, Size, ThemeColor, Profile
 } from './types'
 
 export const backgroundColorMap: Record<Theme, ThemeColor> = {
@@ -60,6 +60,89 @@ export function getTextStyle(theme:Theme, size: Size) {
     ...styles.text,
     ...appendedStyles
   }
+}
+
+export function configureIpfsUrl(uri: string) {
+  if (uri.startsWith('ipfs://')) {
+    let result = uri.substring(7, uri.length)
+    let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`
+    return modifiedUrl
+  } else if (uri.startsWith('https://')) {
+      return uri
+    } else {
+    return null
+  }
+}
+
+export function returnIpfsPathOrUrl(uri: string) {
+  if (uri.startsWith('ipfs://')) {
+    let result = uri.substring(7, uri.length)
+    let modifiedUrl = `https://lens.infura-ipfs.io/ipfs/${result}`
+    return modifiedUrl
+  } else {
+    return uri
+  }
+}
+
+export function formatProfilePictures(profiles: Profile[]) {
+  return profiles.map(profile => {
+    let { picture, coverPicture } = profile
+    if (picture && picture.__typename === 'MediaSet') {
+      if (picture.original) {
+        picture.original.url = returnIpfsPathOrUrl(picture.original.url)
+      }
+    }
+    if (coverPicture && coverPicture.__typename === 'MediaSet') {
+      if (coverPicture.original.url) {
+        coverPicture.original.url = returnIpfsPathOrUrl(coverPicture.original.url)
+      }
+    }
+    return profile
+  })
+}
+
+export function formatProfilePicture(profile: Profile) {
+  profile = JSON.parse(JSON.stringify(profile))
+  let { picture, coverPicture } = profile
+  if (picture && picture.__typename === 'MediaSet') {
+    if (picture.original) {
+      picture.original.url = returnIpfsPathOrUrl(picture.original.url)
+    }
+  }
+  if (coverPicture && coverPicture.__typename === 'MediaSet') {
+    if (coverPicture.original.url) {
+      coverPicture.original.url = returnIpfsPathOrUrl(coverPicture.original.url)
+    }
+  }
+  return profile
+}
+
+export function configureMirrorAndIpfsUrl(items: any[]) {
+  return items.map(item => {
+    if (item.profileSet) return item
+    let { profile } = item
+    if (item.__typename === 'Mirror') {
+      if (item.mirrorOf) {
+        item.originalProfile = profile
+        item.stats = item.mirrorOf.stats
+        profile = item.mirrorOf.profile
+      }
+    }
+    if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
+      const url = configureIpfsUrl(profile.picture.original.url)
+      if (url) {
+        profile.picture.original.url = url
+      } else {
+        profile.missingAvatar = true
+      }
+    } else {
+      profile.missingAvatar = true
+    }
+
+    item.profile = profile
+    item.profileSet = true
+    return item
+  })
 }
 
 const styles = {
