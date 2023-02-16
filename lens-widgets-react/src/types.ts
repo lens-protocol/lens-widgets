@@ -11,11 +11,12 @@ export enum Theme {
 export enum ThemeColor {
   lightGray = '#dcdcdc',
   darkGray = '#464646',
+  lightGreen = '#75B680',
   mint = '#bce0c7',
   green = '#364239',
   peach = '#f5d4d2',
   lavender = '#dbccf3',
-  blonde = '#ffebB8'
+  blonde = '#ffebB8',
 }
 
 export enum Size {
@@ -80,6 +81,11 @@ export type Scalars = {
   UnixTimestamp: any
   Url: any
   Void: any
+}
+
+export type ProfileHandle = {
+  handle: Scalars['Handle'];
+  picture?: string;
 }
 
 export type Profile = {

@@ -11,6 +11,7 @@
     "jsx": "react-jsx",
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
     "skipLibCheck": true,
     "lib": ["ESNext", "DOM"],
     "strict": true,

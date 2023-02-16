@@ -145,6 +145,31 @@ export function configureMirrorAndIpfsUrl(items: any[]) {
   })
 }
 
+export const systemFonts = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";'
+
+export function getSubstring(string, length = 130) {
+  if (string.length <= length) {
+    return string
+  } else {
+    return `${string.substring(0, length)} ...`
+  }
+}
+
+/* takes a string of text and returns the same text with HTML + styling to highlight the handles */
+export function formatHandleColors(text:string) {
+  let color = ThemeColor.lightGreen
+  text = text.replaceAll('.lens', '')
+  text = text.replace(/(https\S+)/g, `<span style="color: ${color};">$1</span>`)
+  return text.replace(/@(\w+)/g, `<span style="color: ${color};">@$1</span>`)
+}
+
+/* takes an array of handles, returns a commma separated string */
+export function formatHandleList(handles) {
+  handles = handles.join(', ')
+  handles = handles.replaceAll('.lens', '')
+  return handles
+}
+
 const styles = {
   buttonContainer: {
     outline: 'none',
