@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { css } from '@emotion/css'
-import { Profile, ThemeColor, ProfileHandle } from './types'
+import { Profile, ThemeColor, ProfileHandle, Theme } from './types'
 import { client } from './graphql/client'
 import { profileById, profileByAddress, followers as followersQuery } from './graphql'
 import {
@@ -15,11 +15,15 @@ import {
 export function Profile({
   profileId,
   ethereumAddress,
-  onPress,
+  onClick,
+  theme = Theme.default,
+  containerStyle = profileContainerStyle
 } : {
   profileId?: string,
   ethereumAddress?: string,
-  onPress?: () => void
+  onClick?: () => void,
+  theme?: Theme,
+  containerStyle?: {}
 }) {
   const [profile, setProfile] = useState<Profile | undefined>()
   const [followers, setFollowers] = useState<ProfileHandle[]>([])
@@ -29,8 +33,8 @@ export function Profile({
   }, [profileId])
 
   function onProfilePress() {
-    if (onPress) {
-      onPress()
+    if (onClick) {
+      onClick()
     } else {
        if (profile) {
         const URI = `https://lenster.xyz/u/${profile.handle}`
@@ -48,8 +52,7 @@ export function Profile({
         }
       })
       const profilesWithImage = response.data.followers.items.filter(p => p.wallet.defaultProfile.picture)
-      let first3 = profilesWithImage.slice(0, 3)
-      first3 = JSON.parse(JSON.stringify(first3))
+      let first3 = JSON.parse(JSON.stringify(profilesWithImage.slice(0, 3)))
       first3 = first3.map(profile => {
         profile.handle = profile.wallet.defaultProfile.handle
         profile.picture = returnIpfsPathOrUrl(profile.wallet.defaultProfile.picture.original.url)
@@ -99,8 +102,8 @@ export function Profile({
   }
   if (!profile) return null
   return (
-    <div className={profileContainerStyle} onClick={onProfilePress}>
-      <div style={styles.headerImageContainer}>
+    <div style={containerStyle} className={profileContainerClass} onClick={onProfilePress}>
+      <div className={headerImageContainerStyle}>
         <div>
           {
             profile.coverPicture?.__typename === 'MediaSet' ? (
@@ -113,11 +116,11 @@ export function Profile({
           {
             profile.picture?.__typename === 'MediaSet' ? (
               <div
-                style={styles.profilePictureContainer}
+                className={getProfilePictureContainerStyle(theme)}
               >
                 <img
                   src={profile.picture.original.url}
-                  style={styles.profilePicture}
+                  className={profilePictureStyle}
                 />
               </div>
               ) : null
@@ -125,9 +128,9 @@ export function Profile({
           </div>
         </div>
       </div>
-      <div className={getProfileInfoContainerStyle()}>
+      <div className={getProfileInfoContainerStyle(theme)}>
         <div className={getButtonContainerStyle()}>
-          <button style={getButtonStyle()}>Follow</button>
+          <button style={getButtonStyle(theme)}>Follow</button>
         </div>
         <div className={profileNameAndBioContainerStyle}>
           <p className={profileNameStyle}>{profile.name}</p>
@@ -139,7 +142,7 @@ export function Profile({
             )
           }
         </div>
-        <div className={statsContainerStyle}>
+        <div className={getStatsContainerStyle(theme)}>
           <p>
             {profile.stats.totalFollowing.toLocaleString('en-US')} <span>Following</span> 
           </p>
@@ -147,12 +150,12 @@ export function Profile({
             {profile.stats.totalFollowers.toLocaleString('en-US')} <span>Followers</span> 
           </p>
         </div>
-        <div className={followedByContainerStyle}>
+        <div className={getFollowedByContainerStyle(theme)}>
           <div className={miniAvatarContainerStyle}>
             {
               followers.map(follower => (
                 <div key={follower.handle} className={getMiniAvatarWrapper()}>
-                  <img src={follower.picture} className={getMiniAvatarStyle()} />
+                  <img src={follower.picture} className={getMiniAvatarStyle(theme)} />
                 </div>
               ))
             }
@@ -168,8 +171,19 @@ export function Profile({
   )
 }
 
+const profileContainerStyle = {
+  width: '510px',
+  borderRadius: '18px',
+  overflow: 'hidden',
+  cursor: 'pointer'
+}
+
 const system = css`
   font-family: ${systemFonts} !important
+`
+
+const headerImageContainerStyle = css`
+  position: relative;
 `
 
 const profileNameAndBioContainerStyle = css`
@@ -187,49 +201,7 @@ const bioStyle = css`
   line-height: 24px;
 `
 
-function getProfileInfoContainerStyle() {
-  return css`
-    background-color: white;
-    padding: 0px 20px 20px;
-  `
-}
-
-const followedByContainerStyle = css`
-  margin-top: 20px;
-  display: flex;
-  color: #464646;
-  align-items: center;
-  span {
-    opacity: .5;
-    margin-right: 4px;
-  }
-  p {
-    margin-right: 5px;
-    font-weight: 600;
-    font-size: 14px;
-  }
-`
-
-const statsContainerStyle = css`
-  display: flex;
-  margin-top: 15px;
-  * {
-    font-weight: 600;
-  }
-  p {
-    margin-right: 10px;
-  }
-  span {
-    color: #464646;
-    opacity: 50%;
-  }
-`
-
-const profileContainerStyle = css`
-  width: 510px;
-  border-radius: 18px;
-  overflow: hidden;
-  cursor: pointer;
+const profileContainerClass = css`
   @media (max-width: 510px) {
     width: 100%
   }
@@ -244,14 +216,69 @@ const miniAvatarContainerStyle = css`
   margin-right: 14px;
 `
 
-function getMiniAvatarStyle() {
+const profilePictureStyle = css`
+  width: 128px;
+  height: 128px;
+  border-radius: 70px;
+`
+
+function getFollowedByContainerStyle(theme:Theme) {
+  let color = ThemeColor.darkGray
+  if (theme === Theme.dark) {
+    color = ThemeColor.white
+  }
   return css`
-    width: 34px;
-    height: 34px;
-    border-radius: 20px;
-    outline: 2px solid white;
-    background-color: white;
-  `  
+  margin-top: 20px;
+  display: flex;
+  color: ${color};
+  align-items: center;
+  span {
+    opacity: .5;
+    margin-right: 4px;
+  }
+  p {
+    margin-right: 5px;
+    font-weight: 600;
+    font-size: 14px;
+  }
+`
+}
+
+function getStatsContainerStyle(theme: Theme) {
+  let color = ThemeColor.darkGray
+  if (theme === Theme.dark) {
+    color = ThemeColor.white
+  }
+  return css`
+    display: flex;
+    margin-top: 15px;
+    * {
+      font-weight: 600;
+    }
+    p {
+      margin-right: 10px;
+    }
+    span {
+      color: ${color};
+      opacity: 50%;
+    }
+  `
+}
+
+function getProfileInfoContainerStyle(theme: Theme) {
+  let backgroundColor = ThemeColor.white
+  let color = ThemeColor.black
+  if (theme === Theme.dark) {
+    backgroundColor = ThemeColor.lightBlack
+    color = ThemeColor.white
+  }
+  return css`
+    background-color: ${backgroundColor};
+    padding: 0px 20px 20px;
+    p {
+      color: ${color};
+    }
+  `
 }
 
 function getButtonContainerStyle() {
@@ -274,6 +301,40 @@ function getMiniAvatarWrapper() {
   `
 }
 
+function getMiniAvatarStyle(theme: Theme) {
+  let color = ThemeColor.white
+  if (theme === Theme.dark) {
+    color = ThemeColor.lightBlack
+  }
+  return css`
+    width: 34px;
+    height: 34px;
+    border-radius: 20px;
+    outline: 2px solid ${color};
+    background-color: ${color};
+  `  
+}
+
+function getProfilePictureContainerStyle(theme: Theme) {
+  let backgroundColor = ThemeColor.white
+  if (theme === Theme.dark) {
+    backgroundColor = ThemeColor.lightBlack
+  }
+  return css`
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    bottom: -50px;
+    background-color: ${backgroundColor};
+    width: 138px;
+    height: 138px;
+    border-radius: 70px;
+    margin-left: 20px;
+  `
+}
+
 function getHeaderImageStyle(url:string) {
   return {
     height: '245px',
@@ -287,44 +348,23 @@ function getHeaderImageStyle(url:string) {
   }
 }
 
-function getButtonStyle() {
+function getButtonStyle(theme: Theme) {
+  let backgroundColor = '#3d4b41'
+  let color = 'white'
+  if (theme === Theme.dark) {
+    color = '#191919'
+    backgroundColor = '#C3E4CD'
+  }
   return {
     marginTop: '10px',
     outline: 'none',
     border: 'none',
-    padding: '10px 30px',
-    backgroundColor: '#3d4b41',
+    padding: '10px 32px',
+    backgroundColor,
     borderRadius: '50px',
-    color: 'white',
+    color,
     fontSize: '16px',
-    fontWeight: '500'
-  }
-}
-
-const styles = {
-  headerImageContainer: {
-    position: 'relative' as 'relative'
-  },
-  profilePictureContainer: {
-    position: 'absolute' as 'absolute',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    left: 0,
-    bottom: -50,
-    backgroundColor: 'white',
-    width: '138px',
-    height: '138px',
-    borderRadius: '69px',
-    marginLeft: '20px'
-  },
-  profilePicture: {
-    width: '128px',
-    height: '128px',
-    borderRadius: '69px'
-  },
-  profileName: {
-    fontSize: '28px',
-    fontWeight: '500'
+    fontWeight: '500',
+    cursor: 'pointer'
   }
 }

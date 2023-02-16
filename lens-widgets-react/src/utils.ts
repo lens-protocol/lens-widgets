@@ -5,16 +5,18 @@ import {
 export const backgroundColorMap: Record<Theme, ThemeColor> = {
   default: ThemeColor.darkGray,
   light: ThemeColor.lightGray,
+  dark: ThemeColor.lightBlack,
   green: ThemeColor.green,
   mint: ThemeColor.mint,
   peach: ThemeColor.peach,
   lavender: ThemeColor.lavender,
-  blonde: ThemeColor.blonde
+  blonde: ThemeColor.blonde,
 }
 
 export const foregroundColorMap: Record<Theme, ThemeColor> = {
   default: ThemeColor.lightGray,
   light: ThemeColor.darkGray,
+  dark: ThemeColor.lightGray,
   green: ThemeColor.mint,
   mint: ThemeColor.darkGray,
   peach: ThemeColor.darkGray,
