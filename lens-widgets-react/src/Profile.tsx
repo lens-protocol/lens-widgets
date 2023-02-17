@@ -51,8 +51,10 @@ export function Profile({
           profileId: id
         }
       })
-      const profilesWithImage = response.data.followers.items.filter(p => p.wallet.defaultProfile.picture)
-      let first3 = JSON.parse(JSON.stringify(profilesWithImage.slice(0, 3)))
+      let filteredProfiles = response.data.followers.items.filter(p => p.wallet.defaultProfile.handle)
+      filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture)
+      filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture.original)
+      let first3 = JSON.parse(JSON.stringify(filteredProfiles.slice(0, 3)))
       first3 = first3.map(profile => {
         profile.handle = profile.wallet.defaultProfile.handle
         profile.picture = returnIpfsPathOrUrl(profile.wallet.defaultProfile.picture.original.url)

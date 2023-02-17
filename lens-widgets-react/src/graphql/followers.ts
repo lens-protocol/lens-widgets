@@ -4,7 +4,7 @@ export const followers = gql`
   query followers($profileId: ProfileId!) {
     followers(request: {
       profileId: $profileId,
-      limit: 10
+      limit: 30
     }) {
       items {
         wallet {
