@@ -1,5 +1,10 @@
 <script>
-  import { ShareToLens, FollowOnLens, SignInWithLens } from '../lib'
+  import {
+    ShareToLens,
+    FollowOnLens,
+    SignInWithLens,
+    Profile
+  } from '../lib'
   import { Theme, Size } from '../lib/types'
 
   function handleSignIn(tokens, profile) {
@@ -8,7 +13,12 @@
   }
 </script>
 
-<h1>Lens Widgets</h1>
+<div style="margin-top: 20px;">
+
+<Profile
+  profileId="0x28a2"
+/>
+<br />
 <SignInWithLens
   onSignIn={handleSignIn}
   size={Size.small}
@@ -89,3 +99,13 @@
   handle="stani"
 />
 
+</div>
+
+
+<style>
+  :global(body) {
+    margin: 0;
+    padding: 0px 20px;
+    background-color: #404040;
+  }
+</style>

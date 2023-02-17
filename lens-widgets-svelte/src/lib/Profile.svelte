@@ -1,12 +1,12 @@
 <script lang="ts">
 import './styles.css'
+import { onMount } from 'svelte'
 import { type Profile, type ProfileHandle, Theme, ThemeColor } from './types'
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { setClient } from "svelte-apollo"
 import { profileById, profileByAddress, getFollowers } from './graphql'
 import {
   formatProfilePicture,
-  systemFonts,
   formatHandleColors,
   returnIpfsPathOrUrl,
   formatHandleList,
@@ -22,20 +22,23 @@ export const client = new ApolloClient({
 setClient(client)
 
 const profileContainerStyle = `
-  width: 510px;
   border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
 `
 
-export let profileId
-export let ethereumAddress
-export let onClick
+export let profileId = undefined
+export let ethereumAddress = undefined
+export let onClick: undefined | (() => void) = undefined
 export let theme = Theme.default
 export let containerStyle = profileContainerStyle
 
-let profile
-let followers
+let profile:Profile
+let followers:ProfileHandle
+
+onMount(async () => {
+  await fetchProfile()
+})
 
 function onProfilePress() {
   if (onClick) {
@@ -56,8 +59,10 @@ async function fetchFollowers(id: string) {
         profileId: id
       }
     })
-    const profilesWithImage = response.data.followers.items.filter(p => p.wallet.defaultProfile.picture)
-    let first3 = JSON.parse(JSON.stringify(profilesWithImage.slice(0, 3)))
+    let filteredProfiles = response.data.followers.items.filter(p => p.wallet.defaultProfile.handle)
+    filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture)
+    filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture.original)
+    let first3 = JSON.parse(JSON.stringify(filteredProfiles.slice(0, 3)))
     first3 = first3.map(profile => {
       profile.handle = profile.wallet.defaultProfile.handle
       profile.picture = returnIpfsPathOrUrl(profile.wallet.defaultProfile.picture.original.url)
@@ -74,6 +79,7 @@ async function fetchProfile() {
     return console.log('please pass in either a Lens profile ID or an Ethereum address')
   }
   if (profileId) {
+    console.log('about to fetch ...')
     try {
       const profileData = await client.query({
         query: profileById,
@@ -82,7 +88,8 @@ async function fetchProfile() {
         }
       })
       fetchFollowers(profileId)
-      formatProfile(profileData.data.profile)
+      profile = formatProfilePicture(profileData.data.profile)
+      console.log('profile: ', profile)
     } catch (err) {
       console.log('error fetching profile... ', err)
     }
@@ -95,20 +102,12 @@ async function fetchProfile() {
         }
       })
       fetchFollowers(profileData.data.defaultProfile.id)
-      formatProfile(profileData.data.defaultProfile)
+      profile = formatProfilePicture(profileData.data.defaultProfile)
     } catch (err) {
       console.log('error fetching profile... ', err)
     }
   }
 }
-function formatProfile(profile: Profile) {
-  let copy = formatProfilePicture(profile)
-  profile = copy
-}
-
-const system = `
-  font-family: ${systemFonts} !important
-`
 
 const headerImageContainerStyle = `
   position: relative;
@@ -127,15 +126,6 @@ const bioStyle = `
   font-weight: 500;
   margin-top: 9px;
   line-height: 24px;
-`
-
-const profileContainerClass = `
-  @media (max-width: 510px) {
-    width: 100%
-  }
-  * {
-    ${system};
-  }
 `
 
 const miniAvatarContainerStyle = `
@@ -160,52 +150,36 @@ function getFollowedByContainerStyle(theme:Theme) {
   display: flex;
   color: ${color};
   align-items: center;
-  span {
-    opacity: .5;
-    margin-right: 4px;
-  }
-  p {
-    margin-right: 5px;
-    font-weight: 600;
-    font-size: 14px;
-  }
 `
 }
 
 function getStatsContainerStyle(theme: Theme) {
+  return `
+    display: flex;
+    margin-top: 15px;
+    font-weight: 600;
+  `
+}
+
+function getSpanColor(theme: Theme) {
   let color = ThemeColor.darkGray
   if (theme === Theme.dark) {
     color = ThemeColor.white
   }
   return `
-    display: flex;
-    margin-top: 15px;
-    * {
-      font-weight: 600;
-    }
-    p {
-      margin-right: 10px;
-    }
-    span {
-      color: ${color};
-      opacity: 50%;
-    }
+  opacity: 50%;
+  color: ${color};
   `
 }
 
 function getProfileInfoContainerStyle(theme: Theme) {
   let backgroundColor = ThemeColor.white
-  let color = ThemeColor.black
   if (theme === Theme.dark) {
     backgroundColor = ThemeColor.lightBlack
-    color = ThemeColor.white
   }
   return `
     background-color: ${backgroundColor};
     padding: 0px 20px 20px;
-    p {
-      color: ${color};
-    }
   `
 }
 
@@ -264,16 +238,16 @@ function getProfilePictureContainerStyle(theme: Theme) {
 }
 
 function getHeaderImageStyle(url:string) {
-  return {
-    height: '245px',
-    backgroundColor: ThemeColor.lightGreen,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center center',
-    backgroundRepeat: 'no-repeat',
-    backgroundImage: `url(${url})`,
-    borderTopLeftRadius: '18px',
-    borderTopRightRadius: '18px',
-  }
+  return `
+    height: 245px;
+    background-color: ${ThemeColor.lightGreen};
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-image: url(${url});
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+  `
 }
 
 function getButtonStyle(theme: Theme) {
@@ -283,24 +257,33 @@ function getButtonStyle(theme: Theme) {
     color = '#191919'
     backgroundColor = '#C3E4CD'
   }
-  return {
-    marginTop: '10px',
-    outline: 'none',
-    border: 'none',
-    padding: '10px 32px',
-    backgroundColor,
-    borderRadius: '50px',
-    color,
-    fontSize: '16px',
-    fontWeight: '500',
-    cursor: 'pointer'
+  return `
+    margin-top: 10px;
+    outline: none;
+    border: none;
+    padding: 10px 32px;
+    background-color: ${backgroundColor};
+    border-radius: 50px;
+    color: ${color};
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+  `
+}
+
+function getProfileMainFontColor(theme: Theme) {
+  if (theme === Theme.dark) {
+    return 'white-text '
+  } else {
+    return 'black-text'
   }
 }
 
 </script>
 
-<div style={containerStyle} class={profileContainerClass} on:click={onProfilePress}>
-  <div class={headerImageContainerStyle}>
+<div style={containerStyle} class="profile-container-class" on:click={onProfilePress}>
+  {#if profile}
+  <div style={headerImageContainerStyle}>
     <div>
       {#if profile.coverPicture?.__typename === 'MediaSet' }
         <div
@@ -310,50 +293,83 @@ function getButtonStyle(theme: Theme) {
       <div>
         {#if profile.picture?.__typename === 'MediaSet'}
         <div
-          className={getProfilePictureContainerStyle(theme)}
+          style={getProfilePictureContainerStyle(theme)}
         >
           <img
             src={profile.picture.original.url}
-            className={profilePictureStyle}
+            style={profilePictureStyle}
           />
         </div>
         {/if}
       </div>
     </div>
   </div>
-  <div className={getProfileInfoContainerStyle(theme)}>
-    <div className={getButtonContainerStyle()}>
+  <div style={getProfileInfoContainerStyle(theme)} class={getProfileMainFontColor(theme)}>
+    <div style={getButtonContainerStyle()}>
       <button style={getButtonStyle(theme)}>Follow</button>
     </div>
-    <div className={profileNameAndBioContainerStyle}>
-      <p className={profileNameStyle}>{profile.name}</p>
+    <div style={profileNameAndBioContainerStyle}>
+      <p style={profileNameStyle}>{profile.name}</p>
       {#if profile.bio}
-        <p className={bioStyle} dangerouslySetInnerHTML={{
-          __html: formatHandleColors(getSubstring(profile.bio))
-        }} /> 
-        {/if}
+      <p style={bioStyle}>{@html formatHandleColors(getSubstring(profile.bio))}</p>
+      {/if}
     </div>
-    <div className={getStatsContainerStyle(theme)}>
-      <p>
-        {profile.stats.totalFollowing.toLocaleString('en-US')} <span>Following</span> 
+    <div style={getStatsContainerStyle(theme)}>
+      <p style='margin-right: 8px;'>
+        {profile.stats.totalFollowing.toLocaleString('en-US')} <span style={getSpanColor(theme)}>Following</span> 
       </p>
       <p>
-        {profile.stats.totalFollowers.toLocaleString('en-US')} <span>Followers</span> 
+        {profile.stats.totalFollowers.toLocaleString('en-US')} <span style={getSpanColor(theme)}>Followers</span> 
       </p>
     </div>
-    <div className={getFollowedByContainerStyle(theme)}>
-      <div className={miniAvatarContainerStyle}>
-        {#each followers as follower}
-          <div key={follower.handle} className={getMiniAvatarWrapper()}>
-            <img src={follower.picture} className={getMiniAvatarStyle(theme)} />
-          </div>
-        {/each}
+    {#if followers}
+      <div style={getFollowedByContainerStyle(theme)} class="followed-by-container">
+        <div style={miniAvatarContainerStyle}>
+          {#each followers as follower}
+            <div style={getMiniAvatarWrapper()}>
+              <img src={follower.picture} style={getMiniAvatarStyle(theme)} />
+            </div>
+          {/each}
+        </div>
+        <p>
+        <span>Followed by</span>
+          {
+          formatHandleList(followers.map(follower => follower.handle))
+        }</p>
       </div>
-      <p>
-      <span>Followed by</span>
-        {
-        formatHandleList(followers.map(follower => follower.handle))
-      }</p>
-    </div>
+    {/if}
   </div>
+  {/if}
 </div>
+
+<style>
+.profile-container-class {
+  width: 510px;
+}
+
+@media (max-width: 510px) {
+  .profile-container-class {
+    width: 100%;
+  }
+}
+
+.black-text {
+  color: black;
+}
+
+.white-text {
+  color: white;
+}
+
+.followed-by-container span {
+  opacity: .5;
+  margin-right: 4px;
+}
+
+.followed-by-container p {
+  margin-right: 5px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+</style>
