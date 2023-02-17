@@ -4,7 +4,11 @@
   import { Theme, Size, type Tokens, type Profile } from './types'
   import { getContainerStyle, getTextStyle } from './utils'
   import { ethers } from 'ethers'
-  import { challenge, authenticate, getProfile } from './graphql'
+  import {
+    challenge,
+    authenticate,
+    profileByAddress
+  } from './graphql'
   import { ApolloClient, InMemoryCache } from '@apollo/client/core'
   import { setClient } from "svelte-apollo"
 
@@ -61,7 +65,7 @@
       })
       const { data: { authenticate: tokens }} = authData
       const profileData = await client.query({
-        query: getProfile,
+        query: profileByAddress,
         variables: {
           address, signature
         }
