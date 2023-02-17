@@ -16,7 +16,7 @@
 <div style="margin-top: 20px;">
 
 <Profile
-  profileId="0x28a2"
+  handle="stani"
 />
 <br />
 <SignInWithLens

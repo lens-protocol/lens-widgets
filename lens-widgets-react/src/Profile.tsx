@@ -2,7 +2,12 @@ import { useEffect, useState } from 'react'
 import { css } from '@emotion/css'
 import { Profile, ThemeColor, ProfileHandle, Theme } from './types'
 import { client } from './graphql/client'
-import { profileById, profileByAddress, followers as followersQuery } from './graphql'
+import {
+  profileById,
+  profileByAddress,
+  getFollowers,
+  profileByHandle
+} from './graphql'
 import {
   formatProfilePicture,
   systemFonts,
@@ -15,11 +20,13 @@ import {
 export function Profile({
   profileId,
   ethereumAddress,
+  handle,
   onClick,
   theme = Theme.default,
   containerStyle = profileContainerStyle
 } : {
   profileId?: string,
+  handle?: string,
   ethereumAddress?: string,
   onClick?: () => void,
   theme?: Theme,
@@ -30,7 +37,7 @@ export function Profile({
 
   useEffect(() => {
     fetchProfile()
-  }, [profileId])
+  }, [profileId, handle, ethereumAddress])
 
   function onProfilePress() {
     if (onClick) {
@@ -46,7 +53,7 @@ export function Profile({
   async function fetchFollowers(id: string) {
     try {
       const response = await client.query({
-        query: followersQuery,
+        query: getFollowers,
         variables: {
           profileId: id
         }
@@ -67,10 +74,28 @@ export function Profile({
   }
 
   async function fetchProfile() {
-    if (!profileId && !ethereumAddress) {
+    if (!profileId && !ethereumAddress && !handle) {
       return console.log('please pass in either a Lens profile ID or an Ethereum address')
     }
-    if (profileId) {
+    if (handle) {
+      try {
+        handle = handle.toLowerCase()
+        if (!handle.includes('.lens')) {
+          handle = handle + '.lens'
+        }
+        const profileData = await client.query({
+          query: profileByHandle,
+          variables: {
+            handle
+          }
+        })
+        console.log('profileData: ', profileData)
+        formatProfile(profileData.data.profile)
+        fetchFollowers(profileData.data.profile.id)
+      } catch (err) {
+        console.log('error fetching profile... ', err)
+      }
+    } else if (profileId) {
       try {
         const profileData = await client.query({
           query: profileById,
@@ -174,7 +199,6 @@ export function Profile({
 }
 
 const profileContainerStyle = {
-  width: '510px',
   borderRadius: '18px',
   overflow: 'hidden',
   cursor: 'pointer'
@@ -195,15 +219,18 @@ const profileNameAndBioContainerStyle = css`
 const profileNameStyle = css`
   font-size: 26px;
   font-weight: 700;
+  margin: 0;
 `
 
 const bioStyle = css`
   font-weight: 500;
   margin-top: 9px;
+  margin-bottom: 0;
   line-height: 24px;
 `
 
 const profileContainerClass = css`
+  width: 510px;
   @media (max-width: 510px) {
     width: 100%
   }
@@ -240,6 +267,8 @@ function getFollowedByContainerStyle(theme:Theme) {
   }
   p {
     margin-right: 5px;
+    margin-bottom: 0;
+    margin-top: 0;
     font-weight: 600;
     font-size: 14px;
   }
@@ -259,6 +288,8 @@ function getStatsContainerStyle(theme: Theme) {
     }
     p {
       margin-right: 10px;
+      margin-top: 0;
+      margin-bottom: 0;
     }
     span {
       color: ${color};

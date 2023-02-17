@@ -4,7 +4,12 @@ import { onMount } from 'svelte'
 import { type Profile, type ProfileHandle, Theme, ThemeColor } from './types'
 import { ApolloClient, InMemoryCache } from '@apollo/client/core'
 import { setClient } from "svelte-apollo"
-import { profileById, profileByAddress, getFollowers } from './graphql'
+import {
+  profileById,
+  profileByAddress,
+  getFollowers,
+  profileByHandle
+} from './graphql'
 import {
   formatProfilePicture,
   formatHandleColors,
@@ -27,14 +32,15 @@ const profileContainerStyle = `
   cursor: pointer;
 `
 
-export let profileId = undefined
-export let ethereumAddress = undefined
+export let profileId: string | undefined = undefined
+export let ethereumAddress: string | undefined = undefined
+export let handle: string | undefined = undefined
 export let onClick: undefined | (() => void) = undefined
 export let theme = Theme.default
 export let containerStyle = profileContainerStyle
 
 let profile:Profile
-let followers:ProfileHandle
+let followers:ProfileHandle[]
 
 onMount(async () => {
   await fetchProfile()
@@ -75,7 +81,7 @@ async function fetchFollowers(id: string) {
 }
 
 async function fetchProfile() {
-  if (!profileId && !ethereumAddress) {
+  if (!profileId && !ethereumAddress && !handle) {
     return console.log('please pass in either a Lens profile ID or an Ethereum address')
   }
   if (profileId) {
@@ -93,6 +99,19 @@ async function fetchProfile() {
     } catch (err) {
       console.log('error fetching profile... ', err)
     }
+  } else if (handle) {
+    handle = handle.toLowerCase()
+    if (!handle.includes('.lens')) {
+      handle = handle + '.lens'
+    }
+    const profileData = await client.query({
+        query: profileByHandle,
+        variables: {
+          handle
+        }
+      })
+      fetchFollowers(profileData.data.profile.id)
+      profile = formatProfilePicture(profileData.data.profile)
   } else {
     try {
       const profileData = await client.query({
