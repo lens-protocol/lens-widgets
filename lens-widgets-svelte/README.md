@@ -8,11 +8,10 @@ npm install @lens-protocol/widgets-svelte
 
 ### Available Components 
 
-- [Usage](#usage)
-  - [Share to Lens](#share-to-lens)
-  - [Follow on Lens](#follow-on-lens)
-  - [Sign in With Lens](#sign-in-with-lens)
-  - [Profile](#profile)
+- [Share to Lens](#share-to-lens)
+- [Follow on Lens](#follow-on-lens)
+- [Sign in With Lens](#sign-in-with-lens)
+- [Profile](#profile)
 
 ## Usage
 
