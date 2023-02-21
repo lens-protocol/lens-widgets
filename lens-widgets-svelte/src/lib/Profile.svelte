@@ -50,10 +50,10 @@ function onProfilePress() {
   if (onClick) {
     onClick()
   } else {
-      if (profile) {
+    if (profile) {
       const URI = `https://lenster.xyz/u/${profile.handle}`
       window.open(URI, '_blank')
-      }
+    }
   }
 }
 
@@ -85,7 +85,6 @@ async function fetchProfile() {
     return console.log('please pass in either a Lens profile ID or an Ethereum address')
   }
   if (profileId) {
-    console.log('about to fetch ...')
     try {
       const profileData = await client.query({
         query: profileById,
@@ -95,7 +94,6 @@ async function fetchProfile() {
       })
       fetchFollowers(profileId)
       profile = formatProfilePicture(profileData.data.profile)
-      console.log('profile: ', profile)
     } catch (err) {
       console.log('error fetching profile... ', err)
     }

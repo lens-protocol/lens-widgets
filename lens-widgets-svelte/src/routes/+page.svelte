@@ -14,16 +14,14 @@
 </script>
 
 <div style="margin-top: 20px;">
-
+<!-- 
 <Profile
   handle="stani"
-/>
+/> -->
 <br />
 <SignInWithLens
   onSignIn={handleSignIn}
-  size={Size.small}
-  theme={Theme.peach}
-  title="Sign in here!"
+  theme={Theme.dark}
 />
 <br />
 <SignInWithLens
@@ -106,6 +104,6 @@
   :global(body) {
     margin: 0;
     padding: 0px 20px;
-    background-color: #404040;
+    background-color: #f3f3f3;
   }
 </style>

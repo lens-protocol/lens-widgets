@@ -295,6 +295,11 @@ function getStatsContainerStyle(theme: Theme) {
       color: ${color};
       opacity: 50%;
     }
+    @media (max-width: 510px) {
+      p {
+        margin: 8px 10px 8px 0px;
+      }
+    }
   `
 }
 

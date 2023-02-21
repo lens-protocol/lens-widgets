@@ -6,6 +6,14 @@
 npm install @lens-protocol/widgets-svelte
 ```
 
+### Available Components 
+
+- [Usage](#usage)
+  - [Share to Lens](#share-to-lens)
+  - [Follow on Lens](#follow-on-lens)
+  - [Sign in With Lens](#sign-in-with-lens)
+  - [Profile](#profile)
+
 ## Usage
 
 ### Share to Lens
@@ -24,11 +32,11 @@ url: string = "https://your-awesome-app.com"
 hashtags: string = "web3,social,blockchain"
 via: string =  "YourAwesomeApp"
 title: string = "Share your post on Lens 🌿"
-theme: Theme (default, light, mint, green, peach, lavender, blonde)
+theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
 
-![Share to Lens](https://user-images.githubusercontent.com/1857282/216202985-490b7043-33de-4eaf-83e3-2d412c677974.jpg)
+![Share to Lens](https://arweave.net/kjf9gWxLkliQku0J_d7b1YTV9rb8m5tPpoqjJ2IaJhI)
 
 ### Follow on Lens
 
@@ -42,12 +50,12 @@ import {
 />
 
 /* Optional parameters */
-theme: Theme (default, light, mint, green, peach, lavender, blonde)
+theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 title: string = "Follow me on Lens"
 ```
 
-![Follow on Lens](https://user-images.githubusercontent.com/1857282/216202951-d962aaa4-3aab-4d11-bab8-0e84ea743d65.jpg)
+![Follow on Lens](https://arweave.net/x_3k0DBeOtHx1zQYquXoLG-Xho1o1aTB2w82xy0KxNk)
 
 ### Sign in With Lens
 
@@ -66,8 +74,30 @@ async function onSignIn(tokens, profile) {
 />
 
 /* Optional parameters */
-provider: EthereumProvider
+provider: Provider
 title: string
-theme: Theme (default, light, mint, green, peach, lavender, blonde)
+theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
+
+![Lens Widgets - Sign in with Lens Button](https://arweave.net/DDTfRhj9e_ZZxsX-jOMNSZ5BpxvArnrRI_OxQ3uiawI)
+
+### Profile
+
+```typescript
+import {
+  Profile, Theme
+} from '@lens-protocol/widgets-svelte'
+
+<Profile
+  handle="nader"
+/>
+
+/* Optional parameters */
+provider: Provider
+title: string
+theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
+size: Size (small, medium, large)
+```
+
+![Lens Widgets - Profile Component](https://arweave.net/rzwHvxSBm55rn4nGCm0Y_a4S_GOk9z3Wjmh-Qpj3Q1Y)

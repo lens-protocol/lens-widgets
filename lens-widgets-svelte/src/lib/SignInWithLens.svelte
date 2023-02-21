@@ -11,7 +11,6 @@
   } from './graphql'
   import { ApolloClient, InMemoryCache } from '@apollo/client/core'
   import { setClient } from "svelte-apollo"
-
   import LensIcon from './LensIcon.svelte'
 
   const API_URL = 'https://api.lens.dev'
@@ -20,12 +19,12 @@
     uri: API_URL,
     cache: new InMemoryCache()
   })
-  setClient(client);
+  setClient(client)
 
   export let theme: Theme = Theme.default
   export let size: Size = Size.medium
   export let title: string = "Sign in with Lens"
-  export let provider: ethers.BrowserProvider | undefined = undefined
+  export let provider: any | undefined = undefined
   export let onSignIn: (tokens: Tokens, profile: Profile) => void
 
   let authTokens: Tokens
