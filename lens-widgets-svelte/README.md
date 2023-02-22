@@ -13,8 +13,6 @@ npm install @lens-protocol/widgets-svelte
 - [Sign in With Lens](#sign-in-with-lens)
 - [Profile](#profile)
 
-## Usage
-
 ### Share to Lens
 
 ```typescript
