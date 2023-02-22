@@ -89,14 +89,16 @@ import {
 } from '@lens-protocol/widgets-svelte'
 
 <Profile
-  handle="nader"
+  handle="stani"
 />
 
 /* Optional parameters */
-provider: Provider
-title: string
-theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
-size: Size (small, medium, large)
+handle: string
+ethereumAddress: string
+profileId: string
+theme: Theme (default, dark)
+onClick: () => void
+containerStyle: css style
 ```
 
 ![Lens Widgets - Profile Component](https://arweave.net/rzwHvxSBm55rn4nGCm0Y_a4S_GOk9z3Wjmh-Qpj3Q1Y)
