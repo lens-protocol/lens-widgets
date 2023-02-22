@@ -1,5 +1,5 @@
 {
-	"name": "@lens-protocol/lens-widgets-svelte",
+	"name": "@lens-protocol/widgets-svelte",
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",

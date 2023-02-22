@@ -14,4 +14,4 @@ Lens Widgets enable you to easily integrate social features into your app with j
 
 ### Embeds
 
-For embeds, check out the documentation here.
+For embeds, check out the documentation [here](https://docs.lens.xyz/docs/integrating-lens).

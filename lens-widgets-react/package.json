@@ -1,5 +1,5 @@
 {
-  "name": "@lens-protocol/lens-widgets-react",
+  "name": "@lens-protocol/widgets-react",
   "version": "0.0.1",
   "description": "React widgets to easily integrate Lens into your app",
   "main": "dist/index.js",
