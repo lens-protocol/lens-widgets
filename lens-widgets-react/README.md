@@ -33,8 +33,6 @@ theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
 
-![Share to Lens](https://arweave.net/kjf9gWxLkliQku0J_d7b1YTV9rb8m5tPpoqjJ2IaJhI)
-
 ### Follow on Lens
 
 ```typescript
@@ -51,8 +49,6 @@ theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 title: string = "Follow me on Lens"
 ```
-
-![Follow on Lens](https://arweave.net/x_3k0DBeOtHx1zQYquXoLG-Xho1o1aTB2w82xy0KxNk)
 
 ### Sign in With Lens
 
@@ -77,8 +73,6 @@ theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 ```
 
-![Lens Widgets - Sign in with Lens Button](https://arweave.net/DDTfRhj9e_ZZxsX-jOMNSZ5BpxvArnrRI_OxQ3uiawI)
-
 ### Profile
 
 ```typescript
@@ -98,5 +92,3 @@ theme: Theme (default, dark)
 onClick: () => void
 containerStyle: css style
 ```
-
-![Lens Widgets - Profile Component](https://arweave.net/rzwHvxSBm55rn4nGCm0Y_a4S_GOk9z3Wjmh-Qpj3Q1Y)
