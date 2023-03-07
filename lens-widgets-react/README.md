@@ -92,3 +92,11 @@ theme: Theme (default, dark)
 onClick: () => void
 containerStyle: css style
 ```
+
+### With Next.js
+
+If you are using Next.js `pages` directory please update your `next.config.js` with the following:
+
+```
+transpilePackages: ['@lens-protocol'],
+```
