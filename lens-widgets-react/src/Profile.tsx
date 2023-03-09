@@ -52,13 +52,13 @@ export function Profile({
 
   async function fetchFollowers(id: string) {
     try {
-      const response = await client.query({
-        query: getFollowers,
-        variables: {
+      const { data } = await client
+        .query(getFollowers, {
           profileId: id
-        }
-      })
-      let filteredProfiles = response.data.followers.items.filter(p => p.wallet.defaultProfile.handle)
+        })
+       .toPromise()
+
+      let filteredProfiles = data.followers.items.filter(p => p.wallet.defaultProfile.handle)
       filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture)
       filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture.original)
       let first3 = JSON.parse(JSON.stringify(filteredProfiles.slice(0, 3)))
@@ -83,41 +83,37 @@ export function Profile({
         if (!handle.includes('.lens')) {
           handle = handle + '.lens'
         }
-        const profileData = await client.query({
-          query: profileByHandle,
-          variables: {
+        const { data } = await client
+          .query(profileByHandle, {
             handle
-          }
-        })
-        console.log('profileData: ', profileData)
-        formatProfile(profileData.data.profile)
-        fetchFollowers(profileData.data.profile.id)
+          })
+          .toPromise()
+        formatProfile(data.profile)
+        fetchFollowers(data.profile.id)
       } catch (err) {
         console.log('error fetching profile... ', err)
       }
     } else if (profileId) {
       try {
-        const profileData = await client.query({
-          query: profileById,
-          variables: {
+        const { data } = await client
+          .query(profileById, {
             profileId
-          }
-        })
+          })
+        .toPromise()
         fetchFollowers(profileId)
-        formatProfile(profileData.data.profile)
+        formatProfile(data.profile)
       } catch (err) {
         console.log('error fetching profile... ', err)
       }
     } else {
       try {
-        const profileData = await client.query({
-          query: profileByAddress,
-          variables: {
+        const { data } = await client
+          .query(profileByAddress, {
             address: ethereumAddress
-          }
-        })
-        fetchFollowers(profileData.data.defaultProfile.id)
-        formatProfile(profileData.data.defaultProfile)
+          })
+          .toPromise()
+        fetchFollowers(data.defaultProfile.id)
+        formatProfile(data.defaultProfile)
       } catch (err) {
         console.log('error fetching profile... ', err)
       }

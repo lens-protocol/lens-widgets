@@ -1,6 +1,4 @@
-import { gql } from '@apollo/client'
-
-export const challenge = gql`
+export const challenge = `
   query Challenge($address: EthereumAddress!) {
     challenge(request: { address: $address }) {
       text

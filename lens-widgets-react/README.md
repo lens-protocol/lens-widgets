@@ -92,30 +92,3 @@ theme: Theme (default, dark)
 onClick: () => void
 containerStyle: css style
 ```
-
-### With Next.js
-
-If you are using Next.js `pages` directory please update your `next.config.js` with the following:
-
-```
-transpilePackages: ['@lens-protocol'],
-```
-
-So the final configuration might look like this:
-
-```
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-  swcMinify: true,
-  transpilePackages: ['@lens-protocol']
-}
-
-module.exports = nextConfig
-```
-
-Once this update is made, please re-run the server:
-
-```sh
-npm run dev
-```

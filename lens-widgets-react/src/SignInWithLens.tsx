@@ -47,26 +47,27 @@ export function SignInWithLens({
         return
       }
       const address = await getAddress()
-      const challengeInfo = await client.query({
-        query: challenge,
-        variables: { address }
-      })
+      const { data: { challenge: { text }} } = await client
+        .query(challenge, {
+          address
+        })
+        .toPromise()
+
       const signer = provider.getSigner()
-      const signature = await signer.signMessage(challengeInfo.data.challenge.text)
-      const authData = await client.mutate({
-        mutation: authenticate,
-        variables: {
+      const signature = await signer.signMessage(text)
+
+      const { data: { authenticate: tokens } } = await client
+        .mutation(authenticate, {
           address, signature
-        }
-      })
-      const { data: { authenticate: tokens }} = authData
-      const profileData = await client.query({
-        query: profileByAddress,
-        variables: {
-          address, signature
-        }
-      })
-      const { data: { defaultProfile }} = profileData
+        })
+        .toPromise()
+
+      const { data: { defaultProfile } } = await client
+        .query(profileByAddress, {
+          address
+        })
+        .toPromise()
+     
       setProfile(defaultProfile)
       setAuthTokens(tokens)
       onSignIn(tokens, defaultProfile)

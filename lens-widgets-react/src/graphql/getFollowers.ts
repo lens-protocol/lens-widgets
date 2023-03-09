@@ -1,6 +1,4 @@
-import { gql } from '@apollo/client'
-
-export const getFollowers = gql`
+export const getFollowers = `
   query followers($profileId: ProfileId!) {
     followers(request: {
       profileId: $profileId,

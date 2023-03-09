@@ -1,8 +1,8 @@
-import { ApolloClient, InMemoryCache } from '@apollo/client'
+import { createClient } from 'urql'
 
 const API_URL = 'https://api.lens.dev'
 
-export const client = new ApolloClient({
-  uri: API_URL,
-  cache: new InMemoryCache()
+/* creates the API client */
+export const client = createClient({
+  url: API_URL
 })

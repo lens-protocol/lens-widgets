@@ -1,6 +1,4 @@
-import { gql } from '@apollo/client'
-
-export const authenticate = gql`
+export const authenticate = `
   mutation Authenticate(
     $address: EthereumAddress!
     $signature: Signature!
