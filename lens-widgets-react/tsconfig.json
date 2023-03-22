@@ -4,7 +4,7 @@
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "declaration": true,

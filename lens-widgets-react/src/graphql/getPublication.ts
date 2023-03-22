@@ -339,4 +339,4 @@ fragment ReferenceModuleFields on ReferenceModule {
     mirrorsRestricted
     degreesOfSeparation
   }
-}
+}`
