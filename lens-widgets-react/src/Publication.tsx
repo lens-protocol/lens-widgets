@@ -53,9 +53,15 @@ export function Publication({
   if (!publication) return null
   publication.profile = formatProfilePicture(publication.profile)
   const { profile } = publication
+
+  const isDarkTheme = theme === Theme.dark
+  const color = isDarkTheme ? ThemeColor.white : ThemeColor.darkGray
+  const backgroundColor = isDarkTheme ? ThemeColor.lightBlack : ThemeColor.white
+  const reactionBgColor = isDarkTheme ? ThemeColor.darkGray : ThemeColor.lightGray
+  const reactionTextColor = isDarkTheme ? ThemeColor.lightGray : ThemeColor.darkGray
   return (
     <div
-      className={publicationContainerStyle}
+      className={publicationContainerStyle(backgroundColor)}
       onClick={onPublicationPress}
     >
       <div className={profileContainerStyle}>
@@ -73,28 +79,34 @@ export function Publication({
             )
           }
         </div>
-        <div className={profileDetailsContainerStyle}>
+        <div className={profileDetailsContainerStyle(color)}>
           <p className={profileNameStyle}>{profile.name || profile.handle}</p>
           <p className={dateStyle}> {formatRelative(subDays(new Date(publication.createdAt), 3), new Date())}</p>
         </div>
       </div>
       <div>
-        <ReactMarkdown>{getSubstring(publication.metadata.content, 339)}</ReactMarkdown>
+        <ReactMarkdown
+          className={markdownStyle(color)}
+        >{getSubstring(publication.metadata.content, 339)}</ReactMarkdown>
       </div>
       <div className={reactionsContainerStyle}>
-        <div className={reactionContainerStyle}>
+        <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <p>{publication.stats.totalAmountOfComments}</p>
         </div>
-        <div className={reactionContainerStyle}>
+        <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <p>{publication.stats.totalAmountOfMirrors}</p>
         </div>
-        <div className={reactionContainerStyle}>
+        <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <p>{publication.stats.totalAmountOfCollects}</p>
         </div>
       </div>
     </div>
   )
 }
+
+const markdownStyle = color => css`
+  color: ${color};
+`
 
 const profileContainerStyle = css`
   display: flex;
@@ -122,22 +134,22 @@ const reactionsContainerStyle = css`
   justify-content: flex-start;
 `
 
-const reactionContainerStyle = css`
-  background-color: ${ThemeColor.lightGray};
+const reactionContainerStyle = (color, backgroundColor) => css`
+  background-color: ${backgroundColor};
   border-radius: 20px;
   padding: 10px;
   margin-right: 10px;
   p {
-    color: ${ThemeColor.darkGray};
+    color: ${color};
     font-size: 14px;
     opacity: .75;
     margin: 0;
   }
 `
 
-const publicationContainerStyle = css`
+const publicationContainerStyle = color => css`
   width: 510px;
-  background-color: white;
+  background-color: ${color};
   cursor: pointer;
   padding: 12px 15px;
   border-radius: 18px;
@@ -155,12 +167,13 @@ const dateStyle = css`
   opacity: .75;
 `
 
-const profileDetailsContainerStyle = css`
+const profileDetailsContainerStyle = color => css`
   display: flex;
   flex-direction: column;
   margin-left: 7px;
   p {
     margin: 0;
+    color: ${color};
   }
 `
 
