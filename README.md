@@ -2,6 +2,8 @@
 
 Lens Widgets enable you to easily integrate social features into your app with just a few lines of code.
 
+![Lens Widgets](widgets_header.png)
+
 ### React
 
 [Lens Widgets React](https://github.com/lens-protocol/lens-widgets/tree/main/lens-widgets-react)
