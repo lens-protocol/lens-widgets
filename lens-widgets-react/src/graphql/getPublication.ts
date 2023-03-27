@@ -85,6 +85,7 @@ fragment PublicationStatsFields on PublicationStats {
   totalAmountOfMirrors
   totalAmountOfCollects
   totalAmountOfComments
+  totalUpvotes
 }
 
 fragment MetadataOutputFields on MetadataOutput {
@@ -94,6 +95,11 @@ fragment MetadataOutputFields on MetadataOutput {
   media {
     original {
       ...MediaFields
+    }
+  }
+  cover {
+    original {
+      url
     }
   }
   attributes {
@@ -339,4 +345,5 @@ fragment ReferenceModuleFields on ReferenceModule {
     mirrorsRestricted
     degreesOfSeparation
   }
-}`
+}
+`

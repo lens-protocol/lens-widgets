@@ -64,7 +64,7 @@ export function getTextStyle(theme:Theme, size: Size) {
   }
 }
 
-export function configureIpfsUrl(uri: string) {
+export function configureUrl(uri: string) {
   if (uri.startsWith('https://')) {
     return uri
   } else if (uri.startsWith('ipfs://')) {
@@ -135,7 +135,7 @@ export function configureMirrorAndIpfsUrl(items: any[]) {
       }
     }
     if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
-      const url = configureIpfsUrl(profile.picture.original.url)
+      const url = configureUrl(profile.picture.original.url)
       if (url) {
         profile.picture.original.url = url
       } else {

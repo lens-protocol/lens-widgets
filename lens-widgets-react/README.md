@@ -12,6 +12,7 @@ npm install @lens-protocol/widgets-react
 - [Follow on Lens](#follow-on-lens)
 - [Sign in With Lens](#sign-in-with-lens)
 - [Profile](#profile)
+- [Publication](#publication)
 
 ### Share to Lens
 
@@ -91,6 +92,22 @@ profileId: string
 theme: Theme (default, dark)
 onClick: () => void
 containerStyle: css style
+```
+
+### Publication
+
+```typescript
+import {
+  Publication, Theme
+} from '@lens-protocol/widgets-react'
+
+<Publication
+  publicationId="0x9afd-0x02e8"
+  theme={Theme.dark}
+/>
+
+/* Optional parameters */
+theme: Theme (default, dark)
 ```
 
 ### With Next.js
