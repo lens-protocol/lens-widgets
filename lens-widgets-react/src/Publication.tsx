@@ -143,7 +143,8 @@ export function Publication({
           <div className={imageContainerStyle}>
             <img
               className={mediaImageStyle}
-            src={media.original.url} />
+              src={media.original.url}
+            />
           </div>
         )
       }
@@ -252,6 +253,7 @@ const profilePictureStyle = css`
   width: 42px;
   height: 42px;
   border-radius: 20px;
+  object-fit: cover;
   background-color: #dddddd;
 `
 
