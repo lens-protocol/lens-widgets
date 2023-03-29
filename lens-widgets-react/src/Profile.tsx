@@ -126,6 +126,7 @@ export function Profile({
     setProfile(copy)
   }
   if (!profile) return null
+
   return (
     <div style={containerStyle} className={profileContainerClass} onClick={onProfilePress}>
       <div className={headerImageContainerStyle}>
@@ -135,7 +136,7 @@ export function Profile({
               <div
                 style={getHeaderImageStyle(profile?.coverPicture?.original?.url)}
               />
-              ) : null
+              ) : <div style={getHeaderImageStyle()} />
           }
           <div>
           {
@@ -150,6 +151,11 @@ export function Profile({
               </div>
               ) : null
           }
+          {
+            profile.picture === null && (
+              <div className={emptyProfilePictureStyle} />
+            )
+          }
           </div>
         </div>
       </div>
@@ -158,7 +164,7 @@ export function Profile({
             <button style={getButtonStyle(theme)}>Follow</button>
           </div>
           <div className={profileNameAndBioContainerStyle}>
-          <p className={profileNameStyle}>{profile.name}</p>
+          <p className={profileNameStyle}>{profile.name || profile.handle}</p>
           {
             profile.bio && (
               <p className={bioStyle} dangerouslySetInnerHTML={{
@@ -186,8 +192,10 @@ export function Profile({
             }
           </div>
           <p>
-          <span>Followed by</span>
-            {
+          {
+            Boolean(followers.length) && <span>Followed by</span>
+          }
+          {
             formatHandleList(followers.map(follower => follower.handle))
           }</p>
         </div>
@@ -201,6 +209,21 @@ const profileContainerStyle = {
   overflow: 'hidden',
   cursor: 'pointer'
 }
+
+const emptyProfilePictureStyle = css`
+  background-color: green;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  left: 0;
+  bottom: -50px;
+  width: 138px;
+  height: 138px;
+  border-radius: 70px;
+  position: absolute;
+  margin-left: 20px;
+  border: 4px solid white;
+`
 
 const system = css`
   font-family: ${systemFonts} !important
@@ -373,14 +396,15 @@ function getProfilePictureContainerStyle(theme: Theme) {
   `
 }
 
-function getHeaderImageStyle(url:string) {
+function getHeaderImageStyle(url?:string) {
+  const backgroundImage = url ? `url(${url})` : null
   return {
     height: '245px',
     backgroundColor: ThemeColor.lightGreen,
     backgroundSize: 'cover',
     backgroundPosition: 'center center',
     backgroundRepeat: 'no-repeat',
-    backgroundImage: `url(${url})`,
+    backgroundImage: backgroundImage,
     borderTopLeftRadius: '18px',
     borderTopRightRadius: '18px',
   }
