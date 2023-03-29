@@ -92,6 +92,7 @@ profileId: string
 theme: Theme (default, dark)
 onClick: () => void
 containerStyle: css style
+hideFollowButton: boolean
 ```
 
 ### Publication

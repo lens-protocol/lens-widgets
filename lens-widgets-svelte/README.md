@@ -71,6 +71,7 @@ provider: Provider
 title: string
 theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
+hideFollowButton: boolean
 ```
 
 ### Profile

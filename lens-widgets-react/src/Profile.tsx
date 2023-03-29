@@ -23,14 +23,16 @@ export function Profile({
   handle,
   onClick,
   theme = Theme.default,
-  containerStyle = profileContainerStyle
+  containerStyle = profileContainerStyle,
+  hideFollowButton
 } : {
   profileId?: string,
   handle?: string,
   ethereumAddress?: string,
   onClick?: () => void,
   theme?: Theme,
-  containerStyle?: {}
+  containerStyle?: {},
+  hideFollowButton?: boolean
 }) {
   const [profile, setProfile] = useState<Profile | undefined>()
   const [followers, setFollowers] = useState<ProfileHandle[]>([])
@@ -152,10 +154,10 @@ export function Profile({
         </div>
       </div>
       <div className={getProfileInfoContainerStyle(theme)}>
-        <div className={getButtonContainerStyle()}>
-          <button style={getButtonStyle(theme)}>Follow</button>
-        </div>
-        <div className={profileNameAndBioContainerStyle}>
+          <div className={getButtonContainerStyle(hideFollowButton)}>
+            <button style={getButtonStyle(theme)}>Follow</button>
+          </div>
+          <div className={profileNameAndBioContainerStyle}>
           <p className={profileNameStyle}>{profile.name}</p>
           {
             profile.bio && (
@@ -315,11 +317,13 @@ function getProfileInfoContainerStyle(theme: Theme) {
   `
 }
 
-function getButtonContainerStyle() {
+function getButtonContainerStyle(hidden) {
+  const visibility = hidden ? 'hidden' : 'visible'
   return css`
     display: flex;
     flex: 1;
     justify-content: flex-end;
+    visibility: ${visibility};
   `
 }
 

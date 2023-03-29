@@ -38,6 +38,7 @@ export let handle: string | undefined = undefined
 export let onClick: undefined | (() => void) = undefined
 export let theme = Theme.default
 export let containerStyle = profileContainerStyle
+export let hideFollowButton: boolean = false
 
 let profile:Profile
 let followers:ProfileHandle[]
@@ -200,11 +201,13 @@ function getProfileInfoContainerStyle(theme: Theme) {
   `
 }
 
-function getButtonContainerStyle() {
+function getButtonContainerStyle(hidden) {
+  let visibility = hidden ? 'hidden' : 'visible'
   return `
     display: flex;
     flex: 1;
     justify-content: flex-end;
+    visibility: ${visibility};
   `
 }
 
@@ -322,7 +325,7 @@ function getProfileMainFontColor(theme: Theme) {
     </div>
   </div>
   <div style={getProfileInfoContainerStyle(theme)} class={getProfileMainFontColor(theme)}>
-    <div style={getButtonContainerStyle()}>
+    <div style={getButtonContainerStyle(hideFollowButton)}>
       <button style={getButtonStyle(theme)}>Follow</button>
     </div>
     <div style={profileNameAndBioContainerStyle}>
