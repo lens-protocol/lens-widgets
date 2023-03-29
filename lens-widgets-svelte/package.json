@@ -1,6 +1,6 @@
 {
 	"name": "@lens-protocol/widgets-svelte",
-	"version": "0.0.3",
+	"version": "0.0.5",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "svelte-kit sync && svelte-package",
