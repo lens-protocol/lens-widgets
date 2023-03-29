@@ -19,12 +19,14 @@ export function SignInWithLens({
   size = Size.medium,
   title = 'Sign in With Lens',
   onSignIn,
+  onError,
 } : {
   provider?: Web3Provider,
   theme?: Theme,
   size?: Size,
   title?: string,
-  onSignIn: (tokens: Tokens, profile: Profile) => void
+  onSignIn: (tokens: Tokens, profile: Profile) => void,
+  onError?: (error) => void
 }) {
   const [authTokens, setAuthTokens] = useState<Tokens | null>(null)
   const [authenticating, setAuthenticating] = useState<boolean>(false)
@@ -75,6 +77,9 @@ export function SignInWithLens({
     } catch (err) {
       setAuthenticating(false)
       console.log('error signing in with Lens...', err)
+      if (onError) {
+        onError(err)
+      }
     }
   }
   async function getAddress() {
