@@ -4,7 +4,9 @@ import { getContainerStyle, getTextStyle } from './utils'
 import { Web3Provider } from '@ethersproject/providers'
 import { ethers } from 'ethers'
 import { client } from './graphql/client'
-import { challenge, authenticate, profileByAddress } from './graphql'
+import {
+  challenge, authenticate, profileByAddress, profiles as profilesQuery
+} from './graphql'
 import LensIcon from './LensIcon'
 
 declare global {
@@ -63,16 +65,24 @@ export function SignInWithLens({
           address, signature
         })
         .toPromise()
-
       const { data: { defaultProfile } } = await client
         .query(profileByAddress, {
           address
         })
         .toPromise()
-     
-      setProfile(defaultProfile)
+      if (!defaultProfile) {
+        const { data: { profiles: { items } } } = await client
+          .query(profilesQuery, {
+            address
+          })
+        .toPromise()
+        onSignIn(tokens, items[0])
+        setProfile(items[0])
+      } else {
+        onSignIn(tokens, defaultProfile)
+        setProfile(defaultProfile)
+      }
       setAuthTokens(tokens)
-      onSignIn(tokens, defaultProfile)
       setAuthenticating(false)
     } catch (err) {
       setAuthenticating(false)
