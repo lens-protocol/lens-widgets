@@ -19,7 +19,10 @@
   handle="stani"
 /> -->
 <br />
-<Profile hideFollowButton handle='christina' />
+<!-- <Profile hideFollowButton handle='christina' /> -->
+<SignInWithLens
+  onSignIn={handleSignIn}
+/>
 </div>
 
 

@@ -7,7 +7,8 @@
   import {
     challenge,
     authenticate,
-    profileByAddress
+    profileByAddress,
+    profiles as profilesQuery
   } from './graphql'
   import { ApolloClient, InMemoryCache } from '@apollo/client/core'
   import { setClient } from "svelte-apollo"
@@ -63,16 +64,26 @@
         }
       })
       const { data: { authenticate: tokens }} = authData
-      const profileData = await client.query({
+      const { data: { defaultProfile }} = await client.query({
         query: profileByAddress,
         variables: {
           address, signature
         }
       })
-      const { data: { defaultProfile }} = profileData
-      profile = defaultProfile
+      if (!defaultProfile) {
+        const { data: { profiles: { items } } } = await client.query({
+          query: profilesQuery,
+          variables: {
+            address
+          }
+        })
+        onSignIn(tokens, items[0])
+        profile = items[0]
+      } else {
+        profile = defaultProfile
+      }
       authTokens = tokens
-      onSignIn(tokens, defaultProfile)
+      onSignIn(tokens, profile)
       authenticating = false
     } catch (err) {
       console.log('error signing in with Lens...', err)
