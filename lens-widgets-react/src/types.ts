@@ -11,6 +11,7 @@ export enum Theme {
 
 export enum ThemeColor {
   lightGray = '#dcdcdc',
+  mediumGray = '#969696',
   darkGray = '#464646',
   lightBlack = '#1C1D1C',
   lightGreen = '#75B680',

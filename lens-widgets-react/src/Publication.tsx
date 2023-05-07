@@ -7,7 +7,7 @@ import rehypeRaw from 'rehype-raw'
 import { ThemeColor, Theme } from './types'
 import { formatDistance } from 'date-fns'
 import {
-  MessageIcon, MirrorIcon, CollectIcon, HeartIcon, PlayIcon
+  MessageIcon, MirrorIcon, CollectIcon, HeartIcon
 } from './icons'
 import {
   formatProfilePicture,
@@ -23,15 +23,21 @@ import { AudioPlayer } from './AudioPlayer'
 export function Publication({
   publicationId,
   onClick,
+  publicationData,
   theme = Theme.default,
 }: {
-  publicationId: string,
+  publicationId?: string,
+  publicationData?: any,
   onClick?: () => void,
   theme?: Theme
 }) {
   let [publication, setPublication] = useState<any>()
   useEffect(() => {
-    fetchPublication()
+    if (!publicationData) {
+      fetchPublication()
+    } else {
+      setPublication(publicationData)
+    }
   }, [publicationId])
   async function fetchPublication() {
     try {
@@ -42,7 +48,7 @@ export function Publication({
        .toPromise()
        setPublication(data.publication)
     } catch (err) {
-
+      console.log('error fetching piublication: ', err)
     }
   }
   function onPublicationPress() {
@@ -56,7 +62,9 @@ export function Publication({
   if (!publication) return null
 
   if (publication.mirrorOf) {
+    const { mirrorOf, ...original} = publication
     publication = publication.mirrorOf
+    publication.original = original
   }
   publication.profile = formatProfilePicture(publication.profile)
   const { profile } = publication
@@ -108,10 +116,18 @@ export function Publication({
        onClick={onPublicationPress}
        className={topLevelContentStyle}
       >
+         {
+            publication.original && (
+              <div className={mirroredByContainerStyle}>
+                <MirrorIcon color={ThemeColor.mediumGray} />
+                <p>mirrored by {publication.original.profile.handle || publication.original.profile.name}</p>
+              </div>
+            )
+          }
         <div className={profileContainerStyle}>
           <div>
             {
-             profile.picture.uri ||  profile.picture?.original?.url ? (
+             profile.picture?.uri || profile.picture?.original?.url ? (
                 <img
                   src={
                     profile.picture.__typename === 'NftImage' ?
@@ -144,6 +160,7 @@ export function Publication({
             <img
               className={mediaImageStyle}
               src={media.original.url}
+              onClick={onPublicationPress}
             />
           </div>
         )
@@ -231,6 +248,7 @@ const mediaImageStyle = css`
 
 const markdownStyle = color => css`
   color: ${color};
+  overflow: hidden;
   p {
     font-size: 14px;
   }
@@ -264,6 +282,20 @@ const reactionsContainerStyle = css`
   justify-content: flex-start;
   align-items: center;
   margin-top: 15px;
+`
+
+const mirroredByContainerStyle = css`
+  display: flex;
+  margin-bottom: 5px;
+  height: 30px;
+  align-items: center;
+  p {
+    margin: 0;
+    color: ${ThemeColor.mediumGray};
+    font-size: 14px;
+    margin-left: 10px;
+    margin-top: -2px;
+  }
 `
 
 const reactionContainerStyle = (color, backgroundColor) => css`

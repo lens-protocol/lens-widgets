@@ -1,10 +1,11 @@
 {
   "name": "@lens-protocol/widgets-react",
-  "version": "0.0.11",
+  "version": "0.0.14",
   "description": "React widgets to easily integrate Lens into your app",
   "main": "dist/index.js",
   "scripts": {
-    "watch:ts": "npx tsc --watch"
+    "watch:ts": "npx tsc --watch",
+    "generate": "graphql-codegen --config ./codegen.yaml"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,12 @@
     "rehype-raw": "^6.1.1",
     "typescript": "^4.9.5",
     "urql": "^3.0.3"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^3.3.1",
+    "@graphql-codegen/fragment-matcher": "^4.0.1",
+    "@graphql-codegen/typed-document-node": "^4.0.1",
+    "@graphql-codegen/typescript": "^3.0.4",
+    "@graphql-codegen/typescript-operations": "^3.0.4"
   }
 }

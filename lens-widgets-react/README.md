@@ -13,6 +13,7 @@ npm install @lens-protocol/widgets-react
 - [Sign in With Lens](#sign-in-with-lens)
 - [Profile](#profile)
 - [Publication](#publication)
+- [Publications](#publications)
 
 ### Share to Lens
 
@@ -109,6 +110,24 @@ import {
 />
 
 /* Optional parameters */
+theme: Theme (default, dark)
+```
+
+### Publications
+
+```typescript
+import {
+  Publications, Theme
+} from '@lens-protocol/widgets-react'
+
+<Publications
+  handle="nader"
+  theme={Theme.dark}
+/>
+
+/* Optional parameters */
+profileId: string
+handle: string
 theme: Theme (default, dark)
 ```
 
