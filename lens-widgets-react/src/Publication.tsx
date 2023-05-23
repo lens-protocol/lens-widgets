@@ -12,7 +12,7 @@ import {
 import {
   formatProfilePicture,
   systemFonts,
-  configureUrl,
+  returnIpfsPathOrUrl,
   getSubstring,
   formatHandleColors
 } from './utils'
@@ -25,11 +25,13 @@ export function Publication({
   onClick,
   publicationData,
   theme = Theme.default,
+  ipfsGateway,
 }: {
   publicationId?: string,
   publicationData?: any,
   onClick?: () => void,
-  theme?: Theme
+  theme?: Theme,
+  ipfsGateway?: string
 }) {
   let [publication, setPublication] = useState<any>()
   useEffect(() => {
@@ -102,12 +104,13 @@ export function Publication({
       ) {
         media.type = 'audio'
       }
-      media.original.url = configureUrl(media.original.url)
+      media.original.url = returnIpfsPathOrUrl(media.original.url, ipfsGateway)
     }
   }
   if (publication.metadata.cover) {
-    cover = configureUrl(publication.metadata.cover.original.url)
+    cover = returnIpfsPathOrUrl(publication.metadata.cover.original.url, ipfsGateway)
   }
+
   return (
     <div
       className={publicationContainerStyle(backgroundColor)}

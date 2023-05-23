@@ -100,7 +100,9 @@ fragment MetadataOutputFields on MetadataOutput {
   cover {
     original {
       url
+      __typename
     }
+    __typename
   }
   attributes {
     displayType

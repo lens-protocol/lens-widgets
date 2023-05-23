@@ -122,6 +122,13 @@ fragment MetadataOutputFields on MetadataOutput {
     traitType
     value
   }
+  cover {
+    original {
+      url
+      __typename
+    }
+    __typename
+  }
   encryptionParams {
     providerSpecificParams {
       encryptionKey

@@ -64,24 +64,10 @@ export function getTextStyle(theme:Theme, size: Size) {
   }
 }
 
-export function configureUrl(uri: string) {
-  if (uri.startsWith('https://')) {
-    return uri
-  } else if (uri.startsWith('ipfs://')) {
-    let result = uri.substring(7, uri.length)
-    return `https://lens.infura-ipfs.io/ipfs/${result}`
-  } else if (uri.startsWith('ar://')) {
-    let result = uri.substring(5, uri.length)
-    return `https://arweave.net/${result}`
-  } else {
-    return null
-  }
-}
-
-export function returnIpfsPathOrUrl(uri: string) {
+export function returnIpfsPathOrUrl(uri: string, ipfsGateway: string = 'https://gateway.ipfscdn.io/ipfs') {
   if (uri.startsWith('ipfs://')) {
     let result = uri.substring(7, uri.length)
-    return  `https://lens.infura-ipfs.io/ipfs/${result}`
+    return  `${ipfsGateway}/${result}`
   } else if (uri.startsWith('ar://')) {
     let result = uri.substring(5, uri.length)
     return `https://arweave.net/${result}`
@@ -135,7 +121,7 @@ export function configureMirrorAndIpfsUrl(items: any[]) {
       }
     }
     if (profile.picture && profile.picture.__typename === 'MediaSet' && profile.picture.original) {
-      const url = configureUrl(profile.picture.original.url)
+      const url = returnIpfsPathOrUrl(profile.picture.original.url)
       if (url) {
         profile.picture.original.url = url
       } else {

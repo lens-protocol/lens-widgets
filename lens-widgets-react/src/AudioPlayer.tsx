@@ -26,8 +26,6 @@ export function AudioPlayer({
 
   const { profile } = publication
 
-  console.log('playIconBgColor: ', playIconBgColor)
-
   return (
    <div>
      <ReactPlayer

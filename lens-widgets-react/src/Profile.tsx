@@ -24,7 +24,8 @@ export function Profile({
   onClick,
   theme = Theme.default,
   containerStyle = profileContainerStyle,
-  hideFollowButton
+  hideFollowButton,
+  ipfsGateway
 } : {
   profileId?: string,
   handle?: string,
@@ -32,7 +33,8 @@ export function Profile({
   onClick?: () => void,
   theme?: Theme,
   containerStyle?: {},
-  hideFollowButton?: boolean
+  hideFollowButton?: boolean,
+  ipfsGateway?: string
 }) {
   const [profile, setProfile] = useState<Profile | undefined>()
   const [followers, setFollowers] = useState<ProfileHandle[]>([])
@@ -66,7 +68,7 @@ export function Profile({
       let first3 = JSON.parse(JSON.stringify(filteredProfiles.slice(0, 3)))
       first3 = first3.map(profile => {
         profile.handle = profile.wallet.defaultProfile.handle
-        profile.picture = returnIpfsPathOrUrl(profile.wallet.defaultProfile.picture.original.url)
+        profile.picture = returnIpfsPathOrUrl(profile.wallet.defaultProfile.picture.original.url, ipfsGateway)
         return profile
       })
       setFollowers(first3)
