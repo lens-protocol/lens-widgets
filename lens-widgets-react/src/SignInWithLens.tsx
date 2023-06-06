@@ -22,13 +22,19 @@ export function SignInWithLens({
   title = 'Sign in With Lens',
   onSignIn,
   onError,
+  containerStyle,
+  textStyle,
+  icon
 } : {
   provider?: Web3Provider,
   theme?: Theme,
   size?: Size,
   title?: string,
   onSignIn: (tokens: Tokens, profile: Profile) => void,
-  onError?: (error) => void
+  onError?: (error) => void,
+  containerStyle?: any,
+  textStyle?: any,
+  icon?: any
 }) {
   const [authTokens, setAuthTokens] = useState<Tokens | null>(null)
   const [authenticating, setAuthenticating] = useState<boolean>(false)
@@ -107,9 +113,11 @@ export function SignInWithLens({
     }
   }
   return (
-    <button onClick={authenticateWithLens} style={getContainerStyle(theme, size)}>
-      <LensIcon theme={theme} size={size} />
-      <p style={getTextStyle(theme, size)}>{title}</p>
+    <button onClick={authenticateWithLens} style={containerStyle || getContainerStyle(theme, size)}>
+      {
+        icon || <LensIcon theme={theme} size={size} />
+      }
+      <p style={textStyle || getTextStyle(theme, size)}>{title}</p>
     </button>
   )
 }

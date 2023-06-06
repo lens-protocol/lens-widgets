@@ -6,12 +6,18 @@ export function FollowOnLens({
   handle,
   theme = Theme.default,
   size = Size.medium,
-  title
+  title,
+  containerStyle,
+  textStyle,
+  icon
 } : {
   handle: string,
   theme?: Theme,
   size?: Size,
-  title?: string
+  title?: string,
+  containerStyle?: any,
+  textStyle?: any,
+  icon?: any
 }) {
   function navigate() {
     if (!handle.includes('.lens')) {
@@ -33,9 +39,9 @@ export function FollowOnLens({
   }
 
   return (
-    <button onClick={navigate} style={getContainerStyle(theme, size)}>
-      <LensIcon theme={theme} size={size} />
-      <p style={getTextStyle(theme, size)}>{title}</p>
+    <button onClick={navigate} style={containerStyle || getContainerStyle(theme, size)}>
+      { icon || <LensIcon theme={theme} size={size} /> }
+      <p style={textStyle || getTextStyle(theme, size)}>{title}</p>
     </button>
   )
 }

@@ -33,6 +33,9 @@ via: string =  "YourAwesomeApp"
 title: string = "Share your post on Lens 🌿"
 theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
+containerStyle: styles object
+textStyle: styles object
+icon: HTML or React element
 ```
 
 ### Follow on Lens
@@ -50,6 +53,9 @@ import {
 theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 title: string = "Follow me on Lens"
+containerStyle: styles object
+textStyle: styles object
+icon: HTML or React element
 ```
 
 ### Sign in With Lens
@@ -74,6 +80,9 @@ title: string
 theme: Theme (default, dark, light, mint, green, peach, lavender, blonde)
 size: Size (small, medium, large)
 onError: (error) => void
+containerStyle: styles object
+textStyle: styles object
+icon: HTML or React element
 ```
 
 ### Profile
