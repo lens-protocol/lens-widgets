@@ -87,6 +87,9 @@ export function Profile({
         if (!handle.includes('.lens')) {
           handle = handle + '.lens'
         }
+        if (handle === 'lensprotocol.lens') {
+          handle = 'lensprotocol'
+        }
         const { data } = await client
           .query(profileByHandle, {
             handle
