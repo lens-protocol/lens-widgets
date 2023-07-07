@@ -36,7 +36,7 @@ export function Profile({
   hideFollowButton?: boolean,
   ipfsGateway?: string
 }) {
-  const [profile, setProfile] = useState<Profile | undefined>()
+  const [profile, setProfile] = useState<any | undefined>()
   const [followers, setFollowers] = useState<ProfileHandle[]>([])
 
   useEffect(() => {
@@ -145,12 +145,16 @@ export function Profile({
           }
           <div>
           {
-            profile.picture?.__typename === 'MediaSet' ? (
+            profile.picture?.__typename === 'MediaSet'
+            || profile.picture?.__typename ===  'NftImage'? (
               <div
                 className={getProfilePictureContainerStyle(theme)}
               >
                 <img
-                  src={profile.picture.original.url}
+                  src={
+                    profile.picture.__typename === 'NftImage' ?
+                    profile.picture.uri : profile.picture?.original?.url
+                  }
                   className={profilePictureStyle}
                 />
               </div>

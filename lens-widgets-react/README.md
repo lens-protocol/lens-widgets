@@ -14,6 +14,7 @@ npm install @lens-protocol/widgets-react
 - [Profile](#profile)
 - [Publication](#publication)
 - [Publications](#publications)
+- [ProfileListItem](#profile-list-item)
 
 ### Share to Lens
 
@@ -140,17 +141,41 @@ handle: string
 theme: Theme (default, dark)
 ```
 
+### ProfileListItem
+
+```typescript
+import {
+  ProfileListItem
+} from '@lens-protocol/widgets-react'
+
+<ProfileListItem
+  handle="christina"
+/>
+
+/* Optional parameters */
+profileId: string
+handle: string
+profile: Profile
+theme: Theme (default, dark)
+onClick: () => void
+onFollowPress: () => void
+isFollowing: boolean
+containerStyle: {}
+followButtonContainerStyle: {}
+followButtonStyle: {}
+```
+
 ### With Next.js
 
 If you are using Next.js `pages` directory please update your `next.config.js` with the following:
 
-```
+```javascript
 transpilePackages: ['@lens-protocol'],
 ```
 
 So the final configuration might look like this:
 
-```
+```javascript
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -168,7 +193,7 @@ npm run dev
 
 Another option when working with Next.js `pages` directory apps is using a Dynamic Import:
 
-```
+```typescript
 /* Profile created in separate component */
 import {
   Profile

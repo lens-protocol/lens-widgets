@@ -62,8 +62,9 @@ export function Publication({
     }
   }
   if (!publication) return null
-
+  let isMirror = false
   if (publication.mirrorOf) {
+    isMirror = true
     const { mirrorOf, ...original} = publication
     publication = publication.mirrorOf
     publication.original = original
@@ -120,14 +121,14 @@ export function Publication({
        className={topLevelContentStyle}
       >
          {
-            publication.original && (
+            isMirror && (
               <div className={mirroredByContainerStyle}>
                 <MirrorIcon color={ThemeColor.mediumGray} />
                 <p>mirrored by {publication.original.profile.handle || publication.original.profile.name}</p>
               </div>
             )
           }
-        <div className={profileContainerStyle}>
+        <div className={profileContainerStyle(isMirror)}>
           <div>
             {
              profile.picture?.uri || profile.picture?.original?.url ? (
@@ -150,7 +151,7 @@ export function Publication({
             <p className={dateStyle}> {formatDistance(new Date(publication.createdAt), new Date())}</p>
           </div>
         </div>
-        <div>
+        <div className={textContainerStyle}>
           <ReactMarkdown
             className={markdownStyle(color)}
             rehypePlugins={[rehypeRaw]}
@@ -181,12 +182,14 @@ export function Publication({
       }
       {
         media && media.type == 'audio' && (
-          <AudioPlayer
-            url={media.original.url}
-            theme={theme}
-            cover={cover}
-            publication={publication}
-          />
+          <div className={audioContainerStyle}>
+            <AudioPlayer
+              url={media.original.url}
+              theme={theme}
+              cover={cover}
+              publication={publication}
+            />
+          </div>
         )
       }
       <div
@@ -218,6 +221,10 @@ export function Publication({
   )
 }
 
+const textContainerStyle = css`
+  padding-top: 12px;
+`
+
 const topLevelContentStyle = css`
   padding: 12px 18px 0px;
 `
@@ -227,12 +234,18 @@ const imageContainerStyle = css`
   width: 100%;
   overflow: hidden;
   max-height: 480px;
+  margin-top: 14px;
 `
 
 const videoContainerStyle = css`
   padding-top: 56.25% !important;
   height: 0px !important;
   position: relative !important;
+  margin-top: 14px;
+`
+
+const audioContainerStyle = css`
+margin-top: 14px;
 `
 
 const videoStyle = css`
@@ -257,9 +270,10 @@ const markdownStyle = color => css`
   }
 `
 
-const profileContainerStyle = css`
+const profileContainerStyle = isMirror => css`
   display: flex;
   align-items: center;
+  padding-top: ${isMirror ? '2px' : '6px'};
 `
 const system = css`
   font-family: ${systemFonts} !important
@@ -330,7 +344,6 @@ const publicationContainerStyle = color => css`
 `
 
 const dateStyle = css`
-  margin-top: 2px !important;
   font-size: 12px;
   color: ${ThemeColor.darkGray};
   opacity: .75;
@@ -339,7 +352,7 @@ const dateStyle = css`
 const profileDetailsContainerStyle = color => css`
   display: flex;
   flex-direction: column;
-  margin-left: 7px;
+  margin-left: 10px;
   p {
     margin: 0;
     color: ${color};

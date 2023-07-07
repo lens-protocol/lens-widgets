@@ -64,13 +64,11 @@ export function getTextStyle(theme:Theme, size: Size) {
   }
 }
 
-export function returnIpfsPathOrUrl(uri: string, ipfsGateway: string = 'https://gateway.ipfscdn.io/ipfs') {
+export function returnIpfsPathOrUrl(uri: string, ipfsGateway: string = 'https://gateway.ipfscdn.io/ipfs/') {
   if (uri.startsWith('ipfs://')) {
-    let result = uri.substring(7, uri.length)
-    return  `${ipfsGateway}/${result}`
+    return uri.replace('ipfs://', ipfsGateway)
   } else if (uri.startsWith('ar://')) {
-    let result = uri.substring(5, uri.length)
-    return `https://arweave.net/${result}`
+    return uri.replace('ar://', 'https://arweave.net/')
   } else {
     return uri
   }
@@ -84,9 +82,19 @@ export function formatProfilePictures(profiles: Profile[]) {
         picture.original.url = returnIpfsPathOrUrl(picture.original.url)
       }
     }
+    if (picture && picture.__typename === 'NftImage') {
+      if (picture.uri) {
+        picture.uri = returnIpfsPathOrUrl(picture.uri)
+      }
+    }
     if (coverPicture && coverPicture.__typename === 'MediaSet') {
       if (coverPicture.original.url) {
         coverPicture.original.url = returnIpfsPathOrUrl(coverPicture.original.url)
+      }
+    }
+    if (coverPicture && coverPicture.__typename === 'NftImage') {
+      if (coverPicture.uri) {
+        coverPicture.uri = returnIpfsPathOrUrl(coverPicture.uri)
       }
     }
     return profile
@@ -138,6 +146,33 @@ export function configureMirrorAndIpfsUrl(items: any[]) {
 }
 
 export const systemFonts = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";'
+
+const pastels = [
+  '#F2C4DE',
+  '#71B1D9',
+  '#AED8F2',
+  '#F2DEA2',
+  '#F2CDC4',
+  '#ABD3DB',
+  '#C2E6DF',
+  '#D1EBD8',
+  '#E5F5DC',
+  '#FFFFE1',
+  '#F2D0D9',
+  '#F2F2F2',
+  '#B8C6D9',
+  '#8596A6',
+  '#F2D9D0',
+  '#A9B5D9',
+  '#F2A477',
+  '#F29472',
+  '#F2C4C4',
+  '#F2F2F2'
+]
+
+export function getRandomColor() {
+  return pastels[Math.floor(Math.random()*pastels.length)]
+}
 
 export function getSubstring(string, length = 130) {
   if (string.length <= length) {
