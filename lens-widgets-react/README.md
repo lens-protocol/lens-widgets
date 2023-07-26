@@ -14,7 +14,7 @@ npm install @lens-protocol/widgets-react
 - [Profile](#profile)
 - [Publication](#publication)
 - [Publications](#publications)
-- [ProfileListItem](#profile-list-item)
+- [ProfileListItem](#profilelistitem)
 
 ### Share to Lens
 
