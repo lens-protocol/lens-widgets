@@ -81,7 +81,7 @@ export function ProfileListItem({
       onClick()
     } else {
        if (profile) {
-        const URI = `https://lenster.xyz/u/${profile.handle}`
+        const URI = `https://share.lens.xyz/u/${profile.handle}`
         window.open(URI, '_blank')
        }
     }

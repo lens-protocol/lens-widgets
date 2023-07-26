@@ -57,7 +57,7 @@ export function Publication({
     if (onClick) {
       onClick()
     } else {
-      const URI = `https://lenster.xyz/posts/${publicationId}`
+      const URI = `https://share.lens.xyz/p/${publicationId}`
       window.open(URI, '_blank')
     }
   }

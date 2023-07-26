@@ -23,8 +23,8 @@ export function FollowOnLens({
     if (!handle.includes('.lens')) {
       handle = handle + '.lens'
     }
-    const uri = `https://www.lensfrens.xyz/${handle.toLowerCase()}/follow`
-    window.open(uri, '_newtab')
+    const URI = `https://share.lens.xyz/u/${handle.toLowerCase()}`
+    window.open(URI, '_newtab')
   }
 
   function handleWithoutLens() {
