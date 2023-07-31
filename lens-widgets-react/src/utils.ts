@@ -64,7 +64,7 @@ export function getTextStyle(theme:Theme, size: Size) {
   }
 }
 
-export function returnIpfsPathOrUrl(uri: string, ipfsGateway: string = 'https://gateway.ipfscdn.io/ipfs/') {
+export function returnIpfsPathOrUrl(uri: string, ipfsGateway: string = 'https://cloudflare-ipfs.com/ipfs/') {
   if (uri.startsWith('ipfs://')) {
     return uri.replace('ipfs://', ipfsGateway)
   } else if (uri.startsWith('ar://')) {
