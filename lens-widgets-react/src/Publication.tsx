@@ -34,6 +34,8 @@ export function Publication({
   ipfsGateway?: string
 }) {
   let [publication, setPublication] = useState<any>()
+  let [showFullText, setShowFullText] = useState(false)
+  
   useEffect(() => {
     if (!publicationData) {
       fetchPublication()
@@ -152,10 +154,22 @@ export function Publication({
           </div>
         </div>
         <div className={textContainerStyle}>
-          <ReactMarkdown
-            className={markdownStyle(color)}
-            rehypePlugins={[rehypeRaw]}
-          >{formatHandleColors(getSubstring(publication.metadata.content, 339))}</ReactMarkdown>
+        <ReactMarkdown
+          className={markdownStyle(color)}
+          rehypePlugins={[rehypeRaw]}
+        >
+          {showFullText 
+            ? formatHandleColors(publication.metadata.content) 
+            : formatHandleColors(getSubstring(publication.metadata.content, 339))}
+        </ReactMarkdown>
+        {publication.metadata.content.length > 339 && (
+          <button className={showMoreStyle} onClick={(event) => {
+            event.stopPropagation()
+            setShowFullText(!showFullText)
+          }}>
+            {showFullText ? 'Show Less' : 'Show More'}
+          </button>
+        )}
         </div>
       </div>
       {
@@ -220,6 +234,17 @@ export function Publication({
     </div>
   )
 }
+
+const showMoreStyle = css`
+  color: ${ThemeColor.lightGreen};
+  font-size: 14px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  transition: opacity 0.2s ease;
+  &:hover {
+    opacity: 0.6;
+  }
+`
 
 const textContainerStyle = css`
   padding-top: 12px;
