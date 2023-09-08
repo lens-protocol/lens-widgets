@@ -26,12 +26,14 @@ export function Publication({
   publicationData,
   theme = Theme.default,
   ipfsGateway,
+  fontSize,
 }: {
   publicationId?: string,
   publicationData?: any,
   onClick?: () => void,
   theme?: Theme,
-  ipfsGateway?: string
+  ipfsGateway?: string,
+  fontSize?: string
 }) {
   let [publication, setPublication] = useState<any>()
   let [showFullText, setShowFullText] = useState(false)
@@ -155,7 +157,7 @@ export function Publication({
         </div>
         <div className={textContainerStyle}>
         <ReactMarkdown
-          className={markdownStyle(color)}
+          className={markdownStyle(color,fontSize)}
           rehypePlugins={[rehypeRaw]}
         >
           {showFullText 
@@ -287,11 +289,15 @@ const mediaImageStyle = css`
   display: block;
 `
 
-const markdownStyle = color => css`
+const markdownStyle = (color, fontSize) => css`
   color: ${color};
   overflow: hidden;
+  li {
+    font-size: ${fontSize || '14px'};
+  }
   p {
-    font-size: 14px;
+    font-size: ${fontSize || '14px'};
+    margin-bottom: 5px;
   }
 `
 

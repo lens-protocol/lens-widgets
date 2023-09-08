@@ -1,11 +1,15 @@
 {
   "name": "@lens-protocol/widgets-react",
-  "version": "0.0.32",
+  "version": "0.0.34",
   "description": "React widgets to easily integrate Lens into your app",
   "main": "dist/index.js",
   "scripts": {
     "watch:ts": "npx tsc --watch",
     "generate": "graphql-codegen --config ./codegen.yaml"
+  },
+  "repository": {
+    "type": "git", 
+    "url": "git+https://github.com/lens-protocol/lens-widgets/tree/main/lens-widgets-react"
   },
   "keywords": [],
   "author": "",

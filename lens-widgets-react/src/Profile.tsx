@@ -24,8 +24,13 @@ export function Profile({
   onClick,
   theme = Theme.default,
   containerStyle = profileContainerStyle,
+  followButtonStyle,
+  followButtonContainerStyle,
+  followButtonBackgroundColor,
+  followButtonTextColor,
   hideFollowButton,
-  ipfsGateway
+  ipfsGateway,
+  onFollowPress
 } : {
   profileId?: string,
   handle?: string,
@@ -33,8 +38,13 @@ export function Profile({
   onClick?: () => void,
   theme?: Theme,
   containerStyle?: {},
+  followButtonStyle?: {},
+  followButtonContainerStyle?: {},
+  followButtonBackgroundColor?: string,
+  followButtonTextColor?: string,
   hideFollowButton?: boolean,
-  ipfsGateway?: string
+  ipfsGateway?: string,
+  onFollowPress?: (event) => void
 }) {
   const [profile, setProfile] = useState<any | undefined>()
   const [followers, setFollowers] = useState<ProfileHandle[]>([])
@@ -133,9 +143,9 @@ export function Profile({
   if (!profile) return null
 
   return (
-    <div style={containerStyle} className={profileContainerClass} onClick={onProfilePress}>
+    <div style={containerStyle} className={profileContainerClass}>
       <div className={headerImageContainerStyle}>
-        <div>
+        <div onClick={onProfilePress}>
           {
             profile.coverPicture?.__typename === 'MediaSet' ? (
               <div
@@ -169,20 +179,28 @@ export function Profile({
         </div>
       </div>
       <div className={getProfileInfoContainerStyle(theme)}>
-          <div className={getButtonContainerStyle(hideFollowButton)}>
-            <button style={getButtonStyle(theme)}>Follow</button>
+          <div
+            style={followButtonContainerStyle || getButtonContainerStyle(hideFollowButton)}
+          >
+            <button
+              onClick={onFollowPress}
+              style={
+                followButtonStyle ||
+                getButtonStyle(theme, followButtonBackgroundColor, followButtonTextColor)
+              }
+            >Follow</button>
           </div>
-          <div className={profileNameAndBioContainerStyle}>
-          <p className={profileNameStyle}>{profile.name || profile.handle}</p>
-          {
-            profile.bio && (
-              <p className={bioStyle} dangerouslySetInnerHTML={{
-                __html: formatHandleColors(getSubstring(profile.bio))
-              }} /> 
-            )
-          }
-        </div>
-        <div className={getStatsContainerStyle(theme)}>
+          <div className={profileNameAndBioContainerStyle} onClick={onProfilePress}>
+            <p className={profileNameStyle}>{profile.name || profile.handle}</p>
+            {
+              profile.bio && (
+                <p className={bioStyle} dangerouslySetInnerHTML={{
+                  __html: formatHandleColors(getSubstring(profile.bio))
+                }} /> 
+              )
+            }
+          </div>
+        <div onClick={onProfilePress} className={getStatsContainerStyle(theme)}>
           <p>
             {profile.stats.totalFollowing.toLocaleString('en-US')} <span>Following</span> 
           </p>
@@ -190,7 +208,7 @@ export function Profile({
             {profile.stats.totalFollowers.toLocaleString('en-US')} <span>Followers</span> 
           </p>
         </div>
-        <div className={getFollowedByContainerStyle(theme)}>
+        <div onClick={onProfilePress} className={getFollowedByContainerStyle(theme)}>
           <div className={miniAvatarContainerStyle}>
             {
               followers.map(follower => (
@@ -214,7 +232,6 @@ export function Profile({
 }
 
 const profileContainerStyle = {
-  borderRadius: '18px',
   overflow: 'hidden',
   cursor: 'pointer'
 }
@@ -346,17 +363,18 @@ function getProfileInfoContainerStyle(theme: Theme) {
     p {
       color: ${color};
     }
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
   `
 }
 
 function getButtonContainerStyle(hidden) {
-  const visibility = hidden ? 'hidden' : 'visible'
-  return css`
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
-    visibility: ${visibility};
-  `
+  return {
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'flex-end',
+    visibility: hidden ? 'hidden' : 'visible' as any
+  }
 }
 
 function getMiniAvatarWrapper() {
@@ -419,12 +437,12 @@ function getHeaderImageStyle(url?:string) {
   }
 }
 
-function getButtonStyle(theme: Theme) {
-  let backgroundColor = '#3d4b41'
-  let color = 'white'
+function getButtonStyle(theme: Theme, bgColor?: string, textColor?: string) {
+  let backgroundColor = bgColor || '#3d4b41'
+  let color = textColor || 'white'
   if (theme === Theme.dark) {
-    color = '#191919'
-    backgroundColor = '#C3E4CD'
+    color = textColor || '#191919'
+    backgroundColor = bgColor || '#C3E4CD'
   }
   return {
     marginTop: '10px',

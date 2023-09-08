@@ -41,6 +41,8 @@ size: Size (small, medium, large)
 containerStyle: styles object
 textStyle: styles object
 icon: HTML or React element
+iconBackgroundColor: string
+iconForegroundColor: string
 ```
 
 ### Follow on Lens
@@ -61,6 +63,8 @@ title: string = "Follow me on Lens"
 containerStyle: styles object
 textStyle: styles object
 icon: HTML or React element
+iconBackgroundColor: string
+iconForegroundColor: string
 ```
 
 ### Sign in With Lens
@@ -88,6 +92,8 @@ onError: (error) => void
 containerStyle: styles object
 textStyle: styles object
 icon: HTML or React element
+iconBackgroundColor: string
+iconForegroundColor: string
 ```
 
 ### Profile
@@ -107,7 +113,12 @@ ethereumAddress: string
 profileId: string
 theme: Theme (default, dark)
 onClick: () => void
-containerStyle: css style
+onFollowPress: () => void
+containerStyle: {}
+followButtonStyle: {}
+followButtonContainerStyle: {}
+followButtonBackgroundColor: string
+followButtonTextColor: string
 hideFollowButton: boolean
 ```
 
@@ -125,6 +136,11 @@ import {
 
 /* Optional parameters */
 theme: Theme (default, dark)
+fontSize: string
+onClick: () => void
+publicationData: Publication
+ipfsGateway: string
+fontSize: string
 ```
 
 ### Publications
