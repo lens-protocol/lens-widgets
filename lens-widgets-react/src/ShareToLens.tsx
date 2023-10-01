@@ -30,7 +30,7 @@ export function ShareToLens({
   iconForegroundColor?: string
 }) {
   function navigate() {
-    let shareUrl = `https://lenster.xyz/?text=${encodeURIComponent(content)}`
+    let shareUrl = `https://hey.xyz/?text=${encodeURIComponent(content)}`
     if (url) {
       shareUrl = shareUrl + `&url=${url}`
     }
