@@ -24,18 +24,30 @@ export function FollowOnLens({
   iconForegroundColor?: string
 }) {
   function navigate() {
-    if (!handle.includes('.lens')) {
-      handle = handle + '.lens'
+    let URI
+    if (handle.includes('.lens')) {
+      URI = `https://share.lens.xyz/u/${handle.toLowerCase()}`
+    } else if (handle.includes('/')) {
+      const parts = handle.split('/')
+      URI = `https://share.lens.xyz/u/${parts[1].toLowerCase()}.${parts[0].toLowerCase()}`
+    } else {
+      URI = `https://share.lens.xyz/u/${handle.toLowerCase()}.lens`
     }
-    const URI = `https://share.lens.xyz/u/${handle.toLowerCase()}`
+    console.log('URI: ', URI)
     window.open(URI, '_newtab')
   }
 
   function handleWithoutLens() {
-    if (handle.includes('.lens')) {
-      handle = handle.split('.')[0]
+    if (handle.includes('/')) {
+      const parts = handle.split('/')
+      return '@' + parts[1]
     }
-    return '@' + handle
+    if (handle.includes('.lens')) {
+      const parts = handle.split('.')
+      return '@' + parts[0]
+    }
+    return handle
+
   }
 
   if (!title) {
