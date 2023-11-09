@@ -37,7 +37,7 @@ export function Publication({
 }) {
   let [publication, setPublication] = useState<any>()
   let [showFullText, setShowFullText] = useState(false)
-  
+  console.log({ publicationId })
   useEffect(() => {
     if (!publicationData) {
       fetchPublication()
@@ -52,9 +52,10 @@ export function Publication({
           publicationId
         })
        .toPromise()
+       console.log('getPublication data:', data)
        setPublication(data.publication)
     } catch (err) {
-      console.log('error fetching piublication: ', err)
+      console.log('error fetching publication: ', err)
     }
   }
   function onPublicationPress() {
@@ -67,14 +68,14 @@ export function Publication({
   }
   if (!publication) return null
   let isMirror = false
-  if (publication.mirrorOf) {
-    isMirror = true
-    const { mirrorOf, ...original} = publication
-    publication = publication.mirrorOf
-    publication.original = original
-  }
-  publication.profile = formatProfilePicture(publication.profile)
-  const { profile } = publication
+  // if (publication.mirrorOn) {
+  //   isMirror = true
+  //   const { mirrorOn, ...original} = publication
+  //   publication = publication.mirrorOn
+  //   publication.original = original
+  // }
+  // publication.profile = formatProfilePicture(publication.profile)
+  // const { profile } = publication
 
   const isDarkTheme = theme === Theme.dark
   const color = isDarkTheme ? ThemeColor.white : ThemeColor.darkGray
@@ -83,38 +84,38 @@ export function Publication({
   const reactionTextColor = isDarkTheme ? ThemeColor.lightGray : ThemeColor.darkGray
 
   let media, cover
-  if (publication.metadata.media.length) {
-    media = publication.metadata.media[0]
-    if (media && media.original) {
-      if (
-        media.original.mimeType === 'image/jpg' ||
-        media.original.mimeType === 'image/jpeg' ||
-        media.original.mimeType === 'image/png' ||
-        media.original.mimeType === 'image/gif'
-      ) {
-        media.type = 'image'
-      }
-      if (
-        media.original.mimeType === 'video/mp4' ||
-        media.original.mimeType === 'video/quicktime' ||
-        media.original.mimeTuype === 'application/x-mpegURL' ||
-        media.original.mimeType === 'video/MP2T'
-      ) {
-        media.type = 'video'
-      }
-      if (
-        media.original.mimeType === 'audio/mpeg' ||
-        media.original.mimeType === 'audio/wav' ||
-        media.original.mimeType === 'audio/mp3'
-      ) {
-        media.type = 'audio'
-      }
-      media.original.url = returnIpfsPathOrUrl(media.original.url, ipfsGateway)
-    }
-  }
-  if (publication.metadata.cover) {
-    cover = returnIpfsPathOrUrl(publication.metadata.cover.original.url, ipfsGateway)
-  }
+  // if (publication.metadata.media.length) {
+  //   media = publication.metadata.media[0]
+  //   if (media && media.original) {
+  //     if (
+  //       media.original.mimeType === 'image/jpg' ||
+  //       media.original.mimeType === 'image/jpeg' ||
+  //       media.original.mimeType === 'image/png' ||
+  //       media.original.mimeType === 'image/gif'
+  //     ) {
+  //       media.type = 'image'
+  //     }
+  //     if (
+  //       media.original.mimeType === 'video/mp4' ||
+  //       media.original.mimeType === 'video/quicktime' ||
+  //       media.original.mimeTuype === 'application/x-mpegURL' ||
+  //       media.original.mimeType === 'video/MP2T'
+  //     ) {
+  //       media.type = 'video'
+  //     }
+  //     if (
+  //       media.original.mimeType === 'audio/mpeg' ||
+  //       media.original.mimeType === 'audio/wav' ||
+  //       media.original.mimeType === 'audio/mp3'
+  //     ) {
+  //       media.type = 'audio'
+  //     }
+  //     media.original.url = returnIpfsPathOrUrl(media.original.url, ipfsGateway)
+  //   }
+  // }
+  // if (publication.metadata.cover) {
+  //   cover = returnIpfsPathOrUrl(publication.metadata.cover.original.url, ipfsGateway)
+  // }
 
   return (
     <div
@@ -124,22 +125,23 @@ export function Publication({
        onClick={onPublicationPress}
        className={topLevelContentStyle}
       >
-         {
+         {/* {
             isMirror && (
               <div className={mirroredByContainerStyle}>
                 <MirrorIcon color={ThemeColor.mediumGray} />
                 <p>mirrored by {publication.original.profile.handle || publication.original.profile.name}</p>
               </div>
             )
-          }
+          } */}
         <div className={profileContainerStyle(isMirror)}>
           <div>
             {
-             profile.picture?.uri || profile.picture?.original?.url ? (
+             publication.by?.metadata.picture?.optimized.uri ||
+             publication.by?.metadata.picture?.image.optimized.uri  ? (
                 <img
                   src={
-                    profile.picture.__typename === 'NftImage' ?
-                    profile.picture.uri : profile.picture?.original?.url
+                    publication.by.metadata.picture.__typename === 'NftImage' ?
+                    publication.by.metadata.picture?.image.optimized.uri : publication.by.metadata.picture?.optimized.uri 
                   }
                   className={profilePictureStyle}
                 />
@@ -151,7 +153,7 @@ export function Publication({
             }
           </div>
           <div className={profileDetailsContainerStyle(color)}>
-            <p className={profileNameStyle}>{profile.name || profile.handle}</p>
+            <p className={profileNameStyle}>{publication.by.metadata.displayName}</p>
             <p className={dateStyle}> {formatDistance(new Date(publication.createdAt), new Date())}</p>
           </div>
         </div>
@@ -175,35 +177,35 @@ export function Publication({
         </div>
       </div>
       {
-        media && media.type == 'image' && (
+        publication.metadata.__typename === "ImageMetadataV3"  && (
           <div className={imageContainerStyle}>
             <img
               className={mediaImageStyle}
-              src={media.original.url}
+              src={publication.metadata.asset.image.optimized.uri}
               onClick={onPublicationPress}
             />
           </div>
         )
       }
       {
-        media && media.type == 'video' && (
+        publication.metadata.__typename === "VideoMetadataV3" && (
           <div className={videoContainerStyle}>
             <ReactPlayer
               className={videoStyle}
-              url={media.original.url}
+              url={publication.metadata.asset.video.optimized.uri}
               controls
             />
           </div>
         )
       }
       {
-        media && media.type == 'audio' && (
+        publication.metadata.__typename === "AudioMetadataV3" && (
           <div className={audioContainerStyle}>
             <AudioPlayer
-              url={media.original.url}
+              url={publication.metadata.asset.audio.optimized.uri}
               theme={theme}
-              cover={cover}
-              publication={publication}
+              cover={publication.metadata.asset.cover?.optimized?.uri}
+              profile={publication.by}
             />
           </div>
         )
@@ -214,24 +216,24 @@ export function Publication({
       >
         <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <MessageIcon color={reactionTextColor} />
-          <p>{publication.stats.totalAmountOfComments}</p>
+          <p>{publication.stats.comments}</p>
         </div>
         <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <MirrorIcon color={reactionTextColor} />
-          <p>{publication.stats.totalAmountOfMirrors}</p>
+          <p>{publication.stats.mirrors}</p>
         </div>
         <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <HeartIcon color={reactionTextColor} />
-          <p>{publication.stats.totalUpvotes}</p>
+          <p>{publication.stats.reactions}</p>
         </div>
-        {
+        {/* {
           publication.stats.totalAmountOfCollects > Number(0) && (
             <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
               <CollectIcon color={reactionTextColor} />
               <p>{publication.stats.totalAmountOfCollects}</p>
             </div>
           )
-        }
+        } */}
       </div>
     </div>
   )

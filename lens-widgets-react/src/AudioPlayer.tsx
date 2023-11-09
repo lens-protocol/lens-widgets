@@ -8,7 +8,7 @@ import { PlayIcon, PauseIcon } from './icons'
 import { getSubstring } from './utils'
 
 export function AudioPlayer({
-  publication,
+  profile,
   url,
   cover,
   theme
@@ -23,8 +23,6 @@ export function AudioPlayer({
   function updateIsPlaying() {
     setIsPlaying(!isPlaying)
   }
-
-  const { profile } = publication
 
   return (
    <div>
@@ -50,8 +48,8 @@ export function AudioPlayer({
         }
       </div>
       <div className={audioMetadataContainerStyle}>
-        <p className={audioMetadataArtistStyle(fontTitleColor)}>{profile.name}</p>
-        <p className={audioMetadataTrackStyle(fontTrackColor)}>{getSubstring(publication?.metadata?.name, 30)}</p>
+        <p className={audioMetadataArtistStyle(fontTitleColor)}>{profile.metadata.displayName}</p>
+        {/* <p className={audioMetadataTrackStyle(fontTrackColor)}>{getSubstring(publication?.metadata?.name, 30)}</p> */}
       </div>
       <div className={playIconWrapperStyle}>
         <div
