@@ -1,9 +1,8 @@
 import { useState, useEffect, useMemo } from 'react'
 import { css } from '@emotion/css'
-import { profileById, profileByHandle, client } from './graphql'
+import { profileById, profile as profileQuery, client } from './graphql'
 import {
   systemFonts,
-  returnIpfsPathOrUrl,
   getRandomColor
 } from './utils'
 import { ThemeColor, Theme } from './types'
@@ -42,17 +41,12 @@ export function ProfileListItem({
     if (handle) {
       try {
         handle = handle.toLowerCase()
-        if (!handle.includes('.lens')) {
-          handle = handle + '.lens'
-        }
-        if (handle === 'lensprotocol.lens') {
-          handle = 'lensprotocol'
-        }
         const { data } = await client
-          .query(profileByHandle, {
+          .query(profileQuery, {
             handle
           })
           .toPromise()
+        console.log('data: ', data)
         setProfile(data.profile)
       } catch (err) {
         console.log('error fetching profile... ', err)
@@ -65,7 +59,7 @@ export function ProfileListItem({
             .query(profileById, {
               profileId
             })
-          .toPromise()
+            .toPromise()
           setProfile(data.profile)
         } catch (err) {
           console.log('error fetching profile... ', err)
@@ -81,7 +75,7 @@ export function ProfileListItem({
       onClick()
     } else {
        if (profile) {
-        const URI = `https://share.lens.xyz/u/${profile.handle}`
+        const URI = `https://share.lens.xyz/u/${profile.handle.localName}.${profile.handle.namespace}`
         window.open(URI, '_blank')
        }
     }
@@ -98,17 +92,17 @@ export function ProfileListItem({
         <div className={contentContainerStyle}>
           <div>
           {
-            profile.picture?.__typename === 'MediaSet'
+            profile.metadata?.picture?.__typename === 'ImageSet'
             || profile.picture?.__typename === 'NftImage'
             ? (
               <div
                 className={getProfilePictureContainerStyle}
               >
                 <img
-                  src={returnIpfsPathOrUrl(
-                    profile.picture.__typename === 'NftImage' ?
-                    profile.picture.uri : profile.picture?.original?.url
-                  )}
+                  src={
+                    profile.metadata.picture.__typename === 'NftImage' ?
+                    profile.metadata.picture.image.optimized.uri :  profile.metadata.picture.optimized.uri 
+                  }
                   className={profilePictureStyle}
                 />
               </div>
@@ -119,14 +113,14 @@ export function ProfileListItem({
               )
           }
           {
-            profile.picture === null && (
+            profile.metadata.picture === null && (
               <div className={emptyProfilePictureStyle} />
             )
           }
           </div>
           <div className={profileInfoContainerStyle}>
-            <p className={profileNameStyle(theme)}>{profile.name || profile.handle}</p>
-            <p className={profileHandleStyle(theme)}>@{profile.handle}</p>
+            <p className={profileNameStyle(theme)}>{profile.name || profile.handle.fullHandle}</p>
+            <p className={profileHandleStyle(theme)}>@{profile.handle.localName}.{profile.handle.namespace}</p>
           </div>
           <div
             style={followButtonContainerStyle ? followButtonContainerStyle : {}}

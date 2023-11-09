@@ -6,14 +6,12 @@ import {
   profileById,
   profileByAddress,
   getFollowers,
-  profileByHandle,
   profile as profileQuery
 } from './graphql'
 import {
   formatProfilePicture,
   systemFonts,
   formatHandleColors,
-  returnIpfsPathOrUrl,
   formatHandleList,
   getSubstring
 } from './utils'
@@ -30,7 +28,6 @@ export function Profile({
   followButtonBackgroundColor,
   followButtonTextColor,
   hideFollowButton,
-  ipfsGateway,
   onFollowPress
 } : {
   profileId?: string,
@@ -44,7 +41,6 @@ export function Profile({
   followButtonBackgroundColor?: string,
   followButtonTextColor?: string,
   hideFollowButton?: boolean,
-  ipfsGateway?: string,
   onFollowPress?: (event) => void
 }) {
   const [profile, setProfile] = useState<any | undefined>()
