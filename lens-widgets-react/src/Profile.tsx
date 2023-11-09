@@ -6,7 +6,8 @@ import {
   profileById,
   profileByAddress,
   getFollowers,
-  profileByHandle
+  profileByHandle,
+  profile as profileQuery
 } from './graphql'
 import {
   formatProfilePicture,
@@ -58,7 +59,8 @@ export function Profile({
       onClick()
     } else {
        if (profile) {
-        const URI = `https://share.lens.xyz/u/${profile.handle}`
+        const { localName, namespace } = profile.handle
+        const URI = `https://share.lens.xyz/u/${localName}.${namespace}`
         window.open(URI, '_blank')
        }
     }
@@ -71,14 +73,13 @@ export function Profile({
           profileId: id
         })
        .toPromise()
-
-      let filteredProfiles = data.followers.items.filter(p => p.wallet.defaultProfile.handle)
-      filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture)
-      filteredProfiles = filteredProfiles.filter(p => p.wallet.defaultProfile.picture.original)
+      let filteredProfiles = data.followers.items.filter(p => p.handle.fullHandle)
+      filteredProfiles = filteredProfiles.filter(p => p.metadata && p.metadata.picture)
+      filteredProfiles = filteredProfiles.filter(p => p.metadata.picture.optimized)
       let first3 = JSON.parse(JSON.stringify(filteredProfiles.slice(0, 3)))
       first3 = first3.map(profile => {
-        profile.handle = profile.wallet.defaultProfile.handle
-        profile.picture = returnIpfsPathOrUrl(profile.wallet.defaultProfile.picture.original.url, ipfsGateway)
+        profile.handle = profile.handle.fullHandle
+        profile.picture = profile.metadata.picture.optimized.uri
         return profile
       })
       setFollowers(first3)
@@ -94,14 +95,8 @@ export function Profile({
     if (handle) {
       try {
         handle = handle.toLowerCase()
-        if (!handle.includes('.lens')) {
-          handle = handle + '.lens'
-        }
-        if (handle === 'lensprotocol.lens') {
-          handle = 'lensprotocol'
-        }
         const { data } = await client
-          .query(profileByHandle, {
+          .query(profileQuery, {
             handle
           })
           .toPromise()
@@ -147,28 +142,27 @@ export function Profile({
       <div className={headerImageContainerStyle}>
         <div onClick={onProfilePress}>
           {
-            profile.coverPicture?.__typename === 'MediaSet' ? (
+            profile.metadata.coverPicture?.optimized?.uri ? (
               <div
-                style={getHeaderImageStyle(profile?.coverPicture?.original?.url)}
+                style={getHeaderImageStyle(profile?.metadata.coverPicture?.optimized?.uri)}
               />
               ) : <div style={getHeaderImageStyle()} />
           }
           <div>
           {
-            profile.picture?.__typename === 'MediaSet'
-            || profile.picture?.__typename ===  'NftImage'? (
+            profile.metadata.picture && (
               <div
                 className={getProfilePictureContainerStyle(theme)}
               >
                 <img
-                  src={
-                    profile.picture.__typename === 'NftImage' ?
-                    profile.picture.uri : profile.picture?.original?.url
+                  src={profile.metadata.picture.__typename === "ImageSet" ?
+                  profile.metadata.picture.optimized.uri :
+                  profile.metadata.picture.image.optimized.uri
                   }
                   className={profilePictureStyle}
                 />
               </div>
-              ) : null
+              )
           }
           {
             profile.picture === null && (
@@ -191,7 +185,7 @@ export function Profile({
             >Follow</button>
           </div>
           <div className={profileNameAndBioContainerStyle} onClick={onProfilePress}>
-            <p className={profileNameStyle}>{profile.name || profile.handle}</p>
+            <p className={profileNameStyle}>{profile.metadata.displayName || profile.handle}</p>
             {
               profile.bio && (
                 <p className={bioStyle} dangerouslySetInnerHTML={{
@@ -202,10 +196,10 @@ export function Profile({
           </div>
         <div onClick={onProfilePress} className={getStatsContainerStyle(theme)}>
           <p>
-            {profile.stats.totalFollowing.toLocaleString('en-US')} <span>Following</span> 
+            {profile.stats.following.toLocaleString('en-US')} <span>Following</span> 
           </p>
           <p>
-            {profile.stats.totalFollowers.toLocaleString('en-US')} <span>Followers</span> 
+            {profile.stats.followers.toLocaleString('en-US')} <span>Followers</span> 
           </p>
         </div>
         <div onClick={onProfilePress} className={getFollowedByContainerStyle(theme)}>
@@ -218,7 +212,7 @@ export function Profile({
               ))
             }
           </div>
-          <p>
+          <p style={{fontSize: 13}}>
           {
             Boolean(followers.length) && <span>Followed by</span>
           }

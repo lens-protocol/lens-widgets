@@ -1,18 +1,28 @@
 export const getFollowers = `
   query followers($profileId: ProfileId!) {
     followers(request: {
-      profileId: $profileId,
-      limit: 30
+      of: $profileId,
+      limit: TwentyFive
     }) {
       items {
-        wallet {
-          defaultProfile {
-            handle
-            picture {
-              ...on MediaSet {
-                original {
-                  url
-                } 
+        handle {
+          id
+          fullHandle
+          namespace
+          localName
+        }
+        metadata {
+          picture {
+            ... on ImageSet {
+              optimized {
+                uri
+              }
+            }
+            ... on NftImage {
+              image {
+                optimized {
+                  uri
+                }
               }
             }
           }

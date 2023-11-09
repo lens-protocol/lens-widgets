@@ -1,9 +1,9 @@
-export const profileByAddress = `
-  query DefaultProfile(
-    $address: EvmAddress!
+export const profile = `
+  query Profile(
+    $handle: Handle!
   ) {
-    defaultProfile(request: {
-      for: $address
+    profile(request: {
+      forHandle: $handle
     }) {
       id
       stats {
