@@ -69,7 +69,7 @@ export function Profile({
           profileId: id
         })
        .toPromise()
-      let filteredProfiles = data.followers.items.filter(p => p.handle.fullHandle)
+      let filteredProfiles = data.followers.items.filter(p => p.handle?.fullHandle)
       filteredProfiles = filteredProfiles.filter(p => p.metadata && p.metadata.picture)
       filteredProfiles = filteredProfiles.filter(p => p.metadata.picture.optimized)
       let first3 = JSON.parse(JSON.stringify(filteredProfiles.slice(0, 3)))

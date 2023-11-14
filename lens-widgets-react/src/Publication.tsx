@@ -7,12 +7,10 @@ import rehypeRaw from 'rehype-raw'
 import { ThemeColor, Theme } from './types'
 import { formatDistance } from 'date-fns'
 import {
-  MessageIcon, MirrorIcon, CollectIcon, HeartIcon
+  MessageIcon, MirrorIcon, HeartIcon
 } from './icons'
 import {
-  formatProfilePicture,
   systemFonts,
-  returnIpfsPathOrUrl,
   getSubstring,
   formatHandleColors
 } from './utils'

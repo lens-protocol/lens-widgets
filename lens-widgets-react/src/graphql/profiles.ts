@@ -7,81 +7,42 @@ query Profiles(
   }) {
     items {
       id
-      name
-      bio
-      attributes {
-        displayType
-        traitType
-        key
-        value
-      }
-      followNftAddress
-      metadata
-      isDefault
-      picture {
-        ... on NftImage {
-          contractAddress
-          tokenId
-          uri
-          verified
-        }
-        ... on MediaSet {
-          original {
-            url
-            mimeType
-          }
-        }
-        __typename
-      }
-      handle
-      coverPicture {
-        ... on NftImage {
-          contractAddress
-          tokenId
-          uri
-          verified
-        }
-        ... on MediaSet {
-          original {
-            url
-            mimeType
-          }
-        }
-        __typename
-      }
-      ownedBy
-      dispatcher {
-        address
-        canUseRelay
-      }
       stats {
-        totalFollowers
-        totalFollowing
-        totalPosts
-        totalComments
-        totalMirrors
-        totalPublications
-        totalCollects
+        following
+        followers
       }
-      followModule {
-        ... on FeeFollowModuleSettings {
-          type
-          amount {
-            asset {
-              symbol
-              name
-              decimals
-              address
+      handle {
+        id
+        fullHandle
+        namespace
+        localName
+      }
+      metadata {
+        displayName
+        bio
+        rawURI
+        appId
+        picture {
+          ... on ImageSet {
+            optimized {
+              uri
             }
-            value
           }
-          recipient
+          ... on NftImage {
+            image {
+              optimized {
+                uri
+              }
+            }
+          }
         }
-        ... on ProfileFollowModuleSettings {
-         type
-        }
-        ... on RevertFollowModuleSettings {
-         type
+        coverPicture {
+          raw {
+            uri
+          }
+          optimized {
+            uri
+          }
         }
       }
     }

@@ -2,11 +2,8 @@ import {
   useEffect, useState
 } from 'react'
 import { css } from '@emotion/css'
-import { client, profileByHandle } from './graphql'
+import { client, profileByHandle, getPublications } from './graphql'
 import { Publication as PublicationComponent } from './Publication'
-import {
-  PublicationsDocument
-} from './graphql/generated'
 import { Theme } from './types'
 
 export function Publications({
@@ -27,9 +24,6 @@ export function Publications({
   async function fetchPublications() {
     let id = profileId
     if (!id && handle) {
-      if (!handle.includes('.lens')) {
-        handle = handle + '.lens'
-      }
       try {
         const response = await client.query(profileByHandle, {
           handle
@@ -40,17 +34,12 @@ export function Publications({
       }
     }
     try {
-      const response = await client.query(PublicationsDocument, {
-        request: {
-          profileId: id
-        }
+      const response = await client.query(getPublications, {
+        profileId: id
       }).toPromise()
-      const publications = response.data?.publications?.items.filter((publication: any) => {
-        if (publication.__typename !== 'Comment') {
-          return true
-        }
-      })
-      setPublications(publications)
+      if (response?.data?.publications?.items) {
+        setPublications(response?.data?.publications?.items)
+      }
     } catch (err) {
       console.log('error fetching publications: ', err)
     }
