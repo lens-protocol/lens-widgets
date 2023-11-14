@@ -1,6 +1,6 @@
 {
   "name": "@lens-protocol/widgets-react",
-  "version": "0.0.34",
+  "version": "2.0.7",
   "description": "React widgets to easily integrate Lens into your app",
   "main": "dist/index.js",
   "scripts": {

@@ -37,7 +37,7 @@ export function Publication({
 }) {
   let [publication, setPublication] = useState<any>()
   let [showFullText, setShowFullText] = useState(false)
-  console.log({ publicationId })
+
   useEffect(() => {
     if (!publicationData) {
       fetchPublication()
@@ -52,7 +52,6 @@ export function Publication({
           publicationId
         })
        .toPromise()
-       console.log('getPublication data:', data)
        setPublication(data.publication)
     } catch (err) {
       console.log('error fetching publication: ', err)
@@ -136,8 +135,8 @@ export function Publication({
         <div className={profileContainerStyle(isMirror)}>
           <div>
             {
-             publication.by?.metadata.picture?.optimized.uri ||
-             publication.by?.metadata.picture?.image.optimized.uri  ? (
+             publication.by?.metadata?.picture?.optimized.uri ||
+             publication.by?.metadata?.picture?.image.optimized.uri  ? (
                 <img
                   src={
                     publication.by.metadata.picture.__typename === 'NftImage' ?
@@ -153,8 +152,12 @@ export function Publication({
             }
           </div>
           <div className={profileDetailsContainerStyle(color)}>
-            <p className={profileNameStyle}>{publication.by.metadata.displayName}</p>
-            <p className={dateStyle}> {formatDistance(new Date(publication.createdAt), new Date())}</p>
+            <p className={profileNameStyle}>{publication.by?.metadata?.displayName}</p>
+            {
+              publication.createdAt && (
+                <p className={dateStyle}> {formatDistance(new Date(publication.createdAt), new Date())}</p>
+              )
+            }
           </div>
         </div>
         <div className={textContainerStyle}>
@@ -163,10 +166,10 @@ export function Publication({
           rehypePlugins={[rehypeRaw]}
         >
           {showFullText 
-            ? formatHandleColors(publication.metadata.content) 
-            : formatHandleColors(getSubstring(publication.metadata.content, 339))}
+            ? formatHandleColors(publication.metadata?.content) 
+            : formatHandleColors(getSubstring(publication.metadata?.content, 339))}
         </ReactMarkdown>
-        {publication.metadata.content.length > 339 && (
+        {publication.metadata?.content?.length > 339 && (
           <button className={showMoreStyle} onClick={(event) => {
             event.stopPropagation()
             setShowFullText(!showFullText)
@@ -177,7 +180,7 @@ export function Publication({
         </div>
       </div>
       {
-        publication.metadata.__typename === "ImageMetadataV3"  && (
+        publication.metadata?.__typename === "ImageMetadataV3"  && (
           <div className={imageContainerStyle}>
             <img
               className={mediaImageStyle}
@@ -188,7 +191,7 @@ export function Publication({
         )
       }
       {
-        publication.metadata.__typename === "VideoMetadataV3" && (
+        publication.metadata?.__typename === "VideoMetadataV3" && (
           <div className={videoContainerStyle}>
             <ReactPlayer
               className={videoStyle}
@@ -199,7 +202,7 @@ export function Publication({
         )
       }
       {
-        publication.metadata.__typename === "AudioMetadataV3" && (
+        publication.metadata?.__typename === "AudioMetadataV3" && (
           <div className={audioContainerStyle}>
             <AudioPlayer
               url={publication.metadata.asset.audio.optimized.uri}
@@ -216,15 +219,15 @@ export function Publication({
       >
         <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <MessageIcon color={reactionTextColor} />
-          <p>{publication.stats.comments}</p>
+          <p>{publication.stats?.comments}</p>
         </div>
         <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <MirrorIcon color={reactionTextColor} />
-          <p>{publication.stats.mirrors}</p>
+          <p>{publication.stats?.mirrors}</p>
         </div>
         <div className={reactionContainerStyle(reactionTextColor, reactionBgColor)}>
           <HeartIcon color={reactionTextColor} />
-          <p>{publication.stats.reactions}</p>
+          <p>{publication.stats?.reactions}</p>
         </div>
         {/* {
           publication.stats.totalAmountOfCollects > Number(0) && (

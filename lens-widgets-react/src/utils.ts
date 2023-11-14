@@ -175,6 +175,7 @@ export function getRandomColor() {
 }
 
 export function getSubstring(string, length = 130) {
+  if (!string) return ''
   if (string.length <= length) {
     return string
   } else {
