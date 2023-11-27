@@ -133,12 +133,12 @@ export function Publication({
         <div className={profileContainerStyle(isMirror)}>
           <div>
             {
-             publication.by?.metadata?.picture?.optimized.uri ||
-             publication.by?.metadata?.picture?.image.optimized.uri  ? (
+             publication.by?.metadata?.picture?.optimized?.uri ||
+             publication.by?.metadata?.picture?.image.optimized?.uri  ? (
                 <img
                   src={
                     publication.by.metadata.picture.__typename === 'NftImage' ?
-                    publication.by.metadata.picture?.image.optimized.uri : publication.by.metadata.picture?.optimized.uri 
+                    publication.by.metadata.picture?.image.optimized?.uri : publication.by.metadata.picture?.optimized?.uri 
                   }
                   className={profilePictureStyle}
                 />
@@ -193,7 +193,7 @@ export function Publication({
           <div className={videoContainerStyle}>
             <ReactPlayer
               className={videoStyle}
-              url={publication.metadata.asset.video.optimized.uri}
+              url={publication.metadata.asset.video.optimized?.uri}
               controls
             />
           </div>
@@ -203,7 +203,7 @@ export function Publication({
         publication.metadata?.__typename === "AudioMetadataV3" && (
           <div className={audioContainerStyle}>
             <AudioPlayer
-              url={publication.metadata.asset.audio.optimized.uri}
+              url={publication.metadata.asset.audio.optimized?.uri}
               theme={theme}
               cover={publication.metadata.asset.cover?.optimized?.uri}
               profile={publication.by}

@@ -156,6 +156,7 @@ import {
 />
 
 /* Optional parameters */
+limit: number (10, 25, or 50)
 profileId: string
 handle: string
 theme: Theme (default, dark)

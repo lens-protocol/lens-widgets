@@ -6,14 +6,22 @@ import { client, profileByHandle, getPublications } from './graphql'
 import { Publication as PublicationComponent } from './Publication'
 import { Theme } from './types'
 
+enum LimitType {
+  TEN = 'TEN',
+  TWENTYFIVE = 'TWENTYFIVE',
+  FIFTY = 'FIFTY'
+}
+
 export function Publications({
   profileId,
   handle,
-  theme
+  theme,
+  numberOfPublications
 } : {
   profileId?: string,
   handle?: string,
-  theme?: Theme
+  theme?: Theme,
+  numberOfPublications?: number
 }) {
   const [publications, setPublications] = useState<any[] | undefined>([])
 
@@ -23,6 +31,15 @@ export function Publications({
 
   async function fetchPublications() {
     let id = profileId
+    let limit:LimitType = LimitType.TEN
+    if (numberOfPublications) {
+      if (numberOfPublications === 25) {
+        limit = LimitType.TWENTYFIVE
+      }
+      if (numberOfPublications === 50) {
+        limit = LimitType.FIFTY
+      }
+    }
     if (!id && handle) {
       try {
         const response = await client.query(profileByHandle, {
@@ -35,7 +52,8 @@ export function Publications({
     }
     try {
       const response = await client.query(getPublications, {
-        profileId: id
+        profileId: id,
+        limit: parseInt(limit)
       }).toPromise()
       if (response?.data?.publications?.items) {
         setPublications(response?.data?.publications?.items)

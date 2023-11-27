@@ -1,9 +1,10 @@
 export const getPublications = `
   query getPublications(
     $profileId: [ProfileId!]
+    $limit: LimitType
   ) {
     publications(request: {
-      limit: TwentyFive
+      limit: $limit
       where: {
         from: $profileId,
         publicationTypes: [POST],
