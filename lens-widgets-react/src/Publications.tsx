@@ -7,9 +7,9 @@ import { Publication as PublicationComponent } from './Publication'
 import { Theme } from './types'
 
 enum LimitType {
-  TEN = 'TEN',
-  TWENTYFIVE = 'TWENTYFIVE',
-  FIFTY = 'FIFTY'
+  TEN = 'Ten',
+  TWENTYFIVE = 'TwentyFive',
+  FIFTY = 'Fifty'
 }
 
 export function Publications({
@@ -53,7 +53,7 @@ export function Publications({
     try {
       const response = await client.query(getPublications, {
         profileId: id,
-        limit: parseInt(limit)
+        limit
       }).toPromise()
       if (response?.data?.publications?.items) {
         setPublications(response?.data?.publications?.items)

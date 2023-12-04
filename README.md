@@ -53,7 +53,7 @@ import {
 } from '@lens-protocol/widgets-react'
 
 <FollowOnLens
-  handle="stani"
+  handle="lens/bradorbradley"
 />
 
 /* Optional parameters */
@@ -104,7 +104,7 @@ import {
 } from '@lens-protocol/widgets-react'
 
 <Profile
-  handle="stani"
+  handle="lens/christina"
 />
 
 /* Optional parameters */
@@ -151,7 +151,7 @@ import {
 } from '@lens-protocol/widgets-react'
 
 <Publications
-  handle="nader"
+  handle="lens/bradorbradley"
   theme={Theme.dark}
 />
 
@@ -170,7 +170,7 @@ import {
 } from '@lens-protocol/widgets-react'
 
 <ProfileListItem
-  handle="christina"
+  handle="lens/christina"
 />
 
 /* Optional parameters */
@@ -222,7 +222,7 @@ import {
 
 export default function ProfileComponent() {
   return (
-    <Profile handle='christina' />
+    <Profile handle='lens/christina' />
   )
 }
 

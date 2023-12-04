@@ -42,7 +42,7 @@ import {
 
 export default function ProfileComponent() {
   return (
-    <Profile handle='christina' />
+    <Profile handle='lens/christina' />
   )
 }
 
